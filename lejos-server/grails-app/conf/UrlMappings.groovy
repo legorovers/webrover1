@@ -11,7 +11,7 @@ class UrlMappings {
 		"/api/sense"(controller:'WebRoverApi', action:[GET:'sense'])
 		"/api"(controller:'WebRoverApi', action:[POST:'post'], parseRequest:true)
 		
-		"/"(view:"/index")
+		"/"(controller:'WebRoverUi', action:[GET:'html'])
 		"500"(view:'/error')
 	}
 }
