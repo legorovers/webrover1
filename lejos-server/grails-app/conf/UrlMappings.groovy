@@ -7,8 +7,9 @@ class UrlMappings {
 //			}
 //		}
 
-		'/api'(controller:'WebRoverApi', action:[GET:'api', POST:'api'], parseRequest:true)
-
+		"/api/$direction/$duration?"(controller:'WebRoverApi', action:[GET:'get'])
+		"/api"(controller:'WebRoverApi', action:[POST:'post'], parseRequest:true)
+		
 		"/"(view:"/index")
 		"500"(view:'/error')
 	}
