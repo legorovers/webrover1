@@ -62,7 +62,7 @@ grails.hibernate.cache.queries = false
 
 nxt.robot.name = 'noor'
 nxt.robot.address = '00165312A8AB'
-nxt.robot.sensor = 'sound'
+nxt.robot.sensor = 'light'
 
 environments {
 	claudia {
