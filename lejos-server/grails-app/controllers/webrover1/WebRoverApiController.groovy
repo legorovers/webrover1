@@ -20,6 +20,11 @@ class WebRoverApiController {
 		render result as JSON
 	}
 	
+	def sense() {
+		def result = [distance:robotService.sense()]
+		render result as JSON
+	}
+	
 	protected action(direction, duration) {
 		switch (direction) {
 			case 'forward':

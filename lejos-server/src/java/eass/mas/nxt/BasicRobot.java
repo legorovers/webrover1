@@ -33,10 +33,10 @@ public class BasicRobot { //implements LegoRobot {
 	DifferentialPilot pilot;
 	boolean haspilot = false;
 	
-//	EASSSensor sensor1;
-//	EASSSensor sensor2;
-//	EASSSensor sensor3;
-//	EASSSensor sensor4;
+    LegoSensor sensor1;
+    LegoSensor sensor2;
+    LegoSensor sensor3;
+    LegoSensor sensor4;
 	
 	public BasicRobot(String name, String address) {
 		brick = new NXTBrick(name, address);
@@ -53,39 +53,39 @@ public class BasicRobot { //implements LegoRobot {
 		return pilot;
 	}
 
-//	public void setSensor(int portnumber, EASSSensor sensor) {
-//		if (portnumber == 1) {
-//			sensor1 = sensor;
-//		}
-//		if (portnumber == 2) {
-//			sensor2 = sensor;
-//		}
-//		if (portnumber == 3) {
-//			sensor3 = sensor;
-//		}
-//		if (portnumber == 4) {
-//			sensor4 = sensor;
-//		}
-//
-//	}
+	public void setSensor(int portnumber, LegoSensor sensor) {
+		if (portnumber == 1) {
+			sensor1 = sensor;
+		}
+		if (portnumber == 2) {
+			sensor2 = sensor;
+		}
+		if (portnumber == 3) {
+			sensor3 = sensor;
+		}
+		if (portnumber == 4) {
+			sensor4 = sensor;
+		}
+
+	}
 	
 	
-//	public EASSSensor getSensor(int portnumber) {
-//		if (portnumber == 1) {
-//			return sensor1;
-//		}
-//		if (portnumber == 2) {
-//			return sensor2;
-//		}
-//		if (portnumber == 3) {
-//			return sensor3;
-//		}
-//		if (portnumber == 4) {
-//			return sensor4;
-//		}		
-//		
-//		return null;
-//	}
+	public LegoSensor getSensor(int portnumber) {
+		if (portnumber == 1) {
+			return sensor1;
+		}
+		if (portnumber == 2) {
+			return sensor2;
+		}
+		if (portnumber == 3) {
+			return sensor3;
+		}
+		if (portnumber == 4) {
+			return sensor4;
+		}		
+		
+		return null;
+	}
 //	
 //	public ArrayList<EASSSensor> getSensors() {
 //		ArrayList<EASSSensor> sensors = new ArrayList<EASSSensor>();

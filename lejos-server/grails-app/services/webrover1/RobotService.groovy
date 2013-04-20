@@ -3,6 +3,7 @@ package webrover1
 import org.springframework.beans.factory.DisposableBean
 import eass.mas.nxt.NXTBrick
 import eass.mas.nxt.BasicRobot
+import eass.mas.nxt.RoverUltrasonicSensor
 import grails.converters.JSON
 
 import java.io.PrintStream
@@ -15,16 +16,20 @@ class RobotService implements DisposableBean {
 	def robot
 	
 	def RobotService() {
-		robot = new BasicRobot('claudia', '001653111619') //'0016530F94C9')
+		robot = new BasicRobot('noor', '00165312A8AB')
 		
 		if (robot.isConnected()) {
+		    /* Robot set up */
 			def brick = robot.getBrick();
-			RemoteMotor claudia_motorLeft = brick.getMotorC();
-			RemoteMotor claudia_motorRight = brick.getMotorA();
+			def claudia_motorLeft = brick.getMotorC();
+			def claudia_motorRight = brick.getMotorA();
 			def pilot = new DifferentialPilot(5, 11, claudia_motorLeft, claudia_motorRight);
 			pilot.setTravelSpeed(10);
 			pilot.setRotateSpeed(15);
 			robot.setPilot(pilot);
+			
+			RoverUltrasonicSensor uSensor = new RoverUltrasonicSensor(brick, 1);
+			robot.setSensor(1, uSensor);
 		}
 	}
 	
@@ -50,6 +55,12 @@ class RobotService implements DisposableBean {
 	}
 	def stop() {
 		robot.pilot.stop()
+	}
+
+	def sense() {
+	    int sensornumber = 1;
+	    def distance = ((RoverUltrasonicSensor) robot.getSensor(1)).distance()
+		return distance
 	}
 
     void destroy() throws Exception {

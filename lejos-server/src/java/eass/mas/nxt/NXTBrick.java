@@ -57,10 +57,10 @@ public class NXTBrick  {
 	public RemoteMotor motorB;
 	public RemoteMotor motorC;
 
-//	public EASSSensorPort Port1;
-//	public EASSSensorPort Port2;
-//	public EASSSensorPort Port3;
-//	public EASSSensorPort Port4;
+	public EASSSensorPort Port1;
+	public EASSSensorPort Port2;
+	public EASSSensorPort Port3;
+	public EASSSensorPort Port4;
 
 	public static int APort = 0;
 	public static int BPort = 1;
@@ -100,10 +100,10 @@ public class NXTBrick  {
 			motorB = new RemoteMotor(nxtcommand, BPort);
 			motorC = new RemoteMotor(nxtcommand, CPort);
 		
-//			Port1 = new EASSSensorPort(nxtcommand, SPort1);	
-//			Port2 = new EASSSensorPort(nxtcommand, SPort2);
-//			Port3 = new EASSSensorPort(nxtcommand, SPort3);	
-//			Port4 = new EASSSensorPort(nxtcommand, SPort4);
+			Port1 = new EASSSensorPort(nxtcommand, SPort1);	
+			Port2 = new EASSSensorPort(nxtcommand, SPort2);
+			Port3 = new EASSSensorPort(nxtcommand, SPort3);	
+			Port4 = new EASSSensorPort(nxtcommand, SPort4);
 		}
 		
 	}
@@ -140,21 +140,21 @@ public class NXTBrick  {
 //		return Port4;
 //	}
 //	
-//	public EASSSensorPort getSensorPort(int i) {
-//		if (i == 1) {
-//			return Port1;
-//		}
-//		if (i == 2) {
-//			return Port2;
-//		}
-//		if (i == 3) {
-//			return Port3;
-//		}
-//		if (i == 4) {
-//			return Port4;
-//		}
-//		else return Port1;
-//	}
+	public EASSSensorPort getSensorPort(int i) {
+		if (i == 1) {
+			return Port1;
+		}
+		if (i == 2) {
+			return Port2;
+		}
+		if (i == 3) {
+			return Port3;
+		}
+		if (i == 4) {
+			return Port4;
+		}
+		else return Port1;
+	}
 
 	
 	
