@@ -8,6 +8,7 @@ import eass.mas.nxt.BasicRobot
 import eass.mas.nxt.RoverUltrasonicSensor
 import eass.mas.nxt.RoverTouchSensor
 import eass.mas.nxt.RoverSoundSensor
+import eass.mas.nxt.RoverLightSensor
 import grails.converters.JSON
 
 import java.io.PrintStream
@@ -43,6 +44,9 @@ class RobotService implements InitializingBean, DisposableBean {
 			} else if (config.sensor.equals('sound')) {
 			 	RoverSoundSensor sSensor = new RoverSoundSensor(brick, 1);
 			 	robot.setSensor(1, sSensor);
+			} else if (config.sensor.equals('light')) {
+				RoverLightSensor lSensor = new RoverLightSensor(brick, 1);
+				robot.setSensor(1, lSensor);
 			}
 		}
 	}
@@ -84,6 +88,9 @@ class RobotService implements InitializingBean, DisposableBean {
 		} else if (config.sensor.equals('sound')) {
 		    def value = ((RoverSoundSensor) robot.getSensor(1)).readValue()
 		    return [sound:value]
+		} else if (config.sensor.equals('light')) {
+			def value = ((RoverLightSensor) robot.getSensor(1)).getLightValue();
+			return [light:value]
 		}
 	}
 
