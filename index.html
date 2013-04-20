@@ -20,8 +20,6 @@
 			el.addEventListener("touchcancel", handleCancel, false);
 			//el.addEventListener("touchleave", handleLeave, false);
 			el.addEventListener("touchmove", handleMove, false);
-
-			
 		}
 
 function handleStart(evt) {
@@ -137,33 +135,31 @@ function getCommandForPoint(touchX, touchY)
   var direction = 'stop';
   //alert(up + '-' + left + ' - ' + directionX + '-' + directionY);
   if(up && left){
-    direction = directionY > directionX ? 'forward' : 'left';
+    direction = directionY > directionX ? 'up' : 'left';
   }
   if(up && !left){
-    direction = directionY > -directionX ? 'forward' : 'right';
+    direction = directionY > -directionX ? 'up' : 'right';
   }
   if(!up && left){
-    direction = -directionY > directionX ? 'backward' : 'left';
+    direction = -directionY > directionX ? 'down' : 'left';
   }
   if(!up && !left){
-    direction = -directionY > -directionX ? 'backward' : 'right';
+    direction = -directionY > -directionX ? 'down' : 'right';
     //direction =   96  < 299 
   }
-
   if(direction == 'left'){
-    duration = directionX;
-  }
-  if (direction == 'forward') {
-    duration = directionY;
-  }
-  if (direction =='right') {
     duration = directionX *-1;
   }
-
-  if (direction == 'backward') {
-    duration = directionY * -1;
+  if (direction == 'up') {
+    duration == directionY;
+  }
+  if (direction =='right') {
+    duration = directionX
   }
 
+  if (direction == 'down') {
+    duration = directionY * -1;
+  }
 
   var jsonResponse = {};
   jsonResponse['direction'] = direction;
@@ -173,9 +169,6 @@ function getCommandForPoint(touchX, touchY)
   
 
   document.getElementById('log').innerHTML = JSON.stringify(jsonResponse);
-  $.post("api", jsonResponse, function(data){
-    console.log(data.result);
-  },"json");
 
 }
 		</script>
