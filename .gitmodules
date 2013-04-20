@@ -1,3 +1,0 @@
-[submodule "game-controller"]
-	path = game-controller
-	url = http://github.com/austinhallock/html5-virtual-game-controller.git

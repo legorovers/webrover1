@@ -151,16 +151,16 @@ function getCommandForPoint(touchX, touchY)
   }
 
   if(direction == 'left'){
-    duration = directionX *-1;
+    duration = directionX;
   }
-  if (direction == 'up') {
-    duration == directionY;
+  if (direction == 'forward') {
+    duration = directionY;
   }
   if (direction =='right') {
-    duration = directionX
+    duration = directionX *-1;
   }
 
-  if (direction == 'down') {
+  if (direction == 'backward') {
     duration = directionY * -1;
   }
 
