@@ -24,11 +24,17 @@ Find it in list
 Set Passcode Preferences...
 1234
 
-7. Run Grails App
+7. Configure robot details in grails-app/conf/Config.groovy
+
+8. Run Grails App
 
 cd lejos-server
 grails run-app
 
-8. Access from browser
+(or -Dgrails.env=claudia run-app)
+
+9. Access from browser
 
 http://localhost:8080/api/forward/1000
+
+10. Assumes motors in A and C, sensor in 1 (optional) 
