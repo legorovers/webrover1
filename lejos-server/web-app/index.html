@@ -22,6 +22,7 @@
 			el.addEventListener("touchmove", handleMove, false);
 
 			setInterval(function(){refreshImg()}, 1000);
+			setInterval(function(){checkSensor()}, 1000);
 
 		}
 
@@ -183,6 +184,12 @@ function getCommandForPoint(touchX, touchY)
 function refreshImg() {
 	  $('#video').attr('src', $('#video').attr('src')+'?'+Math.random())
 }
+function checkSensor() {
+$.getJSON('api/sense', function(data) {
+    document.getElementById('sensor').innerHTML = 'sensor ' + data.pressed;
+});
+}
+
 		</script>
 	</head>
 	<body onload='startup();'>
@@ -190,9 +197,9 @@ function refreshImg() {
 		<canvas height="300px" style='height:300px; border:1px solid black; position:fixed; top:0; left:0;'>
 			
 		</canvas>
-    <div id="log" style="margin-top:350px;">
+    <div id="log" style="margin-top:350px;"></div>
+    <div id="sensor"></div>
 
-    </div>
     <!-- TODO: Remove the hard coded IP Address -->
     <img id="video" src="http://172.17.5.198:8080/shot.jpg"/>
 	</body>
