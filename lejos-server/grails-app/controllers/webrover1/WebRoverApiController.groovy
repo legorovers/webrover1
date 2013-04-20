@@ -25,7 +25,7 @@ class WebRoverApiController {
 	}
 	
 	def sense() {
-		def result = [distance:robotService.sense()]
+		def result = robotService.sense()
 		render result as JSON
 	}
 	

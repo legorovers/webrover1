@@ -6,6 +6,7 @@ import org.springframework.beans.factory.InitializingBean
 import eass.mas.nxt.NXTBrick
 import eass.mas.nxt.BasicRobot
 import eass.mas.nxt.RoverUltrasonicSensor
+import eass.mas.nxt.RoverTouchSensor
 import grails.converters.JSON
 
 import java.io.PrintStream
@@ -32,9 +33,12 @@ class RobotService implements InitializingBean, DisposableBean {
 			pilot.setRotateSpeed(15);
 			robot.setPilot(pilot);
 			
-			if (config.sensor) {
+			if (config.sensor.equals('ultrasonic')) {
 				RoverUltrasonicSensor uSensor = new RoverUltrasonicSensor(brick, 1);
 				robot.setSensor(1, uSensor);
+			} else if (config.sensor.equals('touch')) {
+			    RoverTouchSensor tSensor = new RoverTouchSensor(brick, 1);
+			    robot.setSensor(1, tSensor);
 			}
 		}
 	}
@@ -64,9 +68,16 @@ class RobotService implements InitializingBean, DisposableBean {
 	}
 
 	def sense() {
+		def config = grailsApplication.config.nxt.robot
+	
 	    int sensornumber = 1;
-	    def distance = ((RoverUltrasonicSensor) robot.getSensor(1)).distance()
-		return distance
+	    if (config.sensor.equals('ultrasonic')) {
+	    	def distance = ((RoverUltrasonicSensor) robot.getSensor(1)).distance()
+			return [distance:distance]
+		} else if (config.sensor.equals('touch')) {
+			def bump = ((RoverTouchSensor) robot.getSensor(1)).isPressed()
+			return [pressed:bump]
+		}
 	}
 
     void destroy() throws Exception {
