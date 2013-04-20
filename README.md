@@ -25,4 +25,5 @@ velocity:integer}
 
 ### Rule builder
 Easy rule builder, adapting Tiago Jesus original desktop interface for smaller, mobile devices https://github.com/tiagojesus/LegoRoversUI
-![Rule builder]{https://pbs.twimg.com/media/BITi_QnCUAIuRyi.jpg:large)
+
+![Rule builder](https://pbs.twimg.com/media/BITi_QnCUAIuRyi.jpg:large)
