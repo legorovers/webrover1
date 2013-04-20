@@ -1,0 +1,94 @@
+/* 1. Basic Reset
+ * -----------------------------------------------------
+ */
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+blockquote, q { quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after { content: ""; content: none; }
+
+ins { background-color: #ff9; color: #000; text-decoration: none; }
+
+mark { background-color: #ff9; color: #000; font-style: italic; font-weight: bold; }
+
+del { text-decoration: line-through; }
+
+abbr[title], dfn[title], abbr[original-title], dfn[original-title] { border-bottom: 1px dotted; cursor: help; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+
+hr { display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0; }
+
+input, select { vertical-align: middle; }
+
+
+/* 2. BUG-FIXING DEFAULTS
+ * -----------------------------------------------------
+ */
+a:hover, a:active { outline: none; }
+html { overflow-y: scroll; } /* always force a scrollbar in non-IE */
+img, video, object, embed { max-width: 100% !important;}
+.ie7 img { -ms-interpolation-mode: bicubic; } /* bicubic resizing for non-native sized IMG: 
+   code.flickr.com/blog/2008/11/12/on-ui-quality-the-little-things-client-side-image-resizing/ */
+pre { /* www.pathf.com/blogs/2008/05/formatting-quoted-code-in-blog-posts-css21-white-space-pre-wrap/ */
+  white-space: pre; /* CSS2 */
+  white-space: pre-wrap; /* CSS 2.1 */
+  word-wrap: break-word; /* IE */
+  code {
+  	background-color: transparent;
+  }
+}
+
+b, strong { font-weight: bold; }
+i, em { font-style:italic }
+
+sub, sup { line-height: 0; position: relative; }
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+
+
+/* 3. Lego Rover
+ * -----------------------------------------
+ */
+ 
+ body {
+	font-family: sans-serif;
+	padding: 1em;
+}
+
+canvas {
+	background: #ccc;
+	border: 1px solid #ccc; 
+	max-width: 100%;
+}
+.cam {
+	height: 150px; 
+	max-width: 100%;
+	width: 460px;
+}
+
+.dpad {
+	
+}
