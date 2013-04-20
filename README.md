@@ -17,4 +17,4 @@ velocity:integer}
 ## UI Sketches
 
 ### Main drive screen
-https://twitter.com/sophiedennis/status/325630464842928128/photo/1
+![Main drive screen](https://twitter.com/sophiedennis/status/325630464842928128/photo/1)
