@@ -56,32 +56,37 @@ class RobotService implements InitializingBean, DisposableBean {
 		commands = new ArrayBlockingQueue(1)
 		def th = Thread.start {
 			while (running) {
-				println 'active'
 				def recent = []
 				commands.drainTo(recent)
-				println recent
 				
 				if (recent.size()) {
-					def result = recent[0]
-					def direction = result[0]
-					def duration = result[1]
-					switch (direction) {
+					def command = recent[0]
+					println command.direction
+					def duration = command.duration
+					println duration
+					switch (command.direction) {
 						case 'forward':
-							forward(duration)
+							robot.pilot.forward()
 							break
 						case 'left':
-							left(duration)
+							robot.pilot.rotateLeft()
 							break
 						case 'right':
-							right(duration)
+							robot.pilot.rotateRight()
 							break
 						case 'backward':
-							backward(duration)
+							robot.pilot.backward()
 							break
 						case 'stop':
-							stop()
+							duration = 0
+							//robot.pilot.stop()
 							break
 					}
+					while (duration > 0 && commands.size() == 0) {
+						Thread.sleep(10)
+						duration -= 10
+					}
+					robot.pilot.stop()
 				}
 				Thread.sleep(100)
 			}
@@ -90,35 +95,9 @@ class RobotService implements InitializingBean, DisposableBean {
 	}
 	
 	def action(direction, duration) {
-		println direction
-		println duration
-		commands.put([direction, duration])
+		commands.put([direction:direction, duration:duration])
 	}
 	
-    def left(duration) {
-		robot.pilot.rotateLeft()
-		Thread.sleep(duration)
-		robot.pilot.stop()
-    }
-	def right(duration) {
-		robot.pilot.rotateRight()
-		Thread.sleep(duration)
-		robot.pilot.stop()
-	}
-	def forward(duration) {
-		robot.pilot.forward()
-		Thread.sleep(duration)
-		robot.pilot.stop()
-	}
-	def backward(duration) {
-		robot.pilot.backward()
-		Thread.sleep(duration)
-		robot.pilot.stop()
-	}
-	def stop() {
-		robot.pilot.stop()
-	}
-
 	def sense() {
 		def config = grailsApplication.config.nxt.robot
 	
