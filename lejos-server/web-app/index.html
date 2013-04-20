@@ -21,7 +21,8 @@
 			//el.addEventListener("touchleave", handleLeave, false);
 			el.addEventListener("touchmove", handleMove, false);
 
-			
+			setInterval(function(){refreshImg()}, 1000);
+
 		}
 
 function handleStart(evt) {
@@ -168,7 +169,7 @@ function getCommandForPoint(touchX, touchY)
   var jsonResponse = {};
   jsonResponse['direction'] = direction;
   jsonResponse['distance'] = null;
-  jsonResponse['duration'] = duration;
+  jsonResponse['duration'] = duration * 5;
   jsonResponse['velocity'] = 30;
   
 
@@ -177,6 +178,10 @@ function getCommandForPoint(touchX, touchY)
     console.log(data.result);
   },"json");
 
+}
+
+function refreshImg() {
+	  $('#video').attr('src', $('#video').attr('src')+'?'+Math.random())
 }
 		</script>
 	</head>
@@ -189,6 +194,6 @@ function getCommandForPoint(touchX, touchY)
 
     </div>
     <!-- TODO: Remove the hard coded IP Address -->
-    <img src="http://172.17.5.198:8080/video"/>
+    <img id="video" src="http://172.17.5.198:8080/shot.jpg"/>
 	</body>
 </html>
