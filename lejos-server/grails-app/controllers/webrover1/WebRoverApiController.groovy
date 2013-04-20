@@ -30,22 +30,6 @@ class WebRoverApiController {
 	}
 	
 	protected action(direction, duration) {
-		switch (direction) {
-			case 'forward':
-				robotService.forward(duration)
-				break
-			case 'left':
-				robotService.left(duration)
-				break
-			case 'right':
-				robotService.right(duration)
-				break
-			case 'backward':
-				robotService.backward(duration)
-				break
-			case 'stop':
-				robotService.stop()
-				break
-		}
+		robotService.action(direction, duration)
 	}
 }

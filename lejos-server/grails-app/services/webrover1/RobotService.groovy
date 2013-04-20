@@ -10,6 +10,7 @@ import eass.mas.nxt.RoverTouchSensor
 import grails.converters.JSON
 
 import java.io.PrintStream
+import java.util.concurrent.ArrayBlockingQueue
 
 import lejos.nxt.remote.RemoteMotor
 import lejos.robotics.navigation.DifferentialPilot
@@ -17,6 +18,8 @@ import lejos.robotics.navigation.DifferentialPilot
 class RobotService implements InitializingBean, DisposableBean {
 
 	def robot
+	def commands
+	def running = true
 	def grailsApplication
 
     public void afterPropertiesSet() throws Exception {
@@ -41,6 +44,47 @@ class RobotService implements InitializingBean, DisposableBean {
 			    robot.setSensor(1, tSensor);
 			}
 		}
+		
+		commands = new ArrayBlockingQueue(1)
+		def th = Thread.start {
+			while (running) {
+				println 'active'
+				def recent = []
+				commands.drainTo(recent)
+				println recent
+				
+				if (recent.size()) {
+					def result = recent[0]
+					def direction = result[0]
+					def duration = result[1]
+					switch (direction) {
+						case 'forward':
+							forward(duration)
+							break
+						case 'left':
+							left(duration)
+							break
+						case 'right':
+							right(duration)
+							break
+						case 'backward':
+							backward(duration)
+							break
+						case 'stop':
+							stop()
+							break
+					}
+				}
+				Thread.sleep(100)
+			}
+		}
+		
+	}
+	
+	def action(direction, duration) {
+		println direction
+		println duration
+		commands.put([direction, duration])
 	}
 	
     def left(duration) {
@@ -81,6 +125,7 @@ class RobotService implements InitializingBean, DisposableBean {
 	}
 
     void destroy() throws Exception {
+		running = false
 		robot.close()
     }
 }
