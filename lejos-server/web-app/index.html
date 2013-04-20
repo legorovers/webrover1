@@ -133,7 +133,7 @@ function getCommandForPoint(touchX, touchY)
   var directionY = centreY - touchY;
   var left = directionX > 0 ? true : false;
   var up = directionY > 0 ? true : false;
-
+  var duration = 250;
   var direction = 'stop';
   //alert(up + '-' + left + ' - ' + directionX + '-' + directionY);
   if(up && left){
@@ -149,10 +149,26 @@ function getCommandForPoint(touchX, touchY)
     direction = -directionY > -directionX ? 'backward' : 'right';
     //direction =   96  < 299 
   }
+
+  if(direction == 'left'){
+    duration = directionX *-1;
+  }
+  if (direction == 'up') {
+    duration == directionY;
+  }
+  if (direction =='right') {
+    duration = directionX
+  }
+
+  if (direction == 'down') {
+    duration = directionY * -1;
+  }
+
+
   var jsonResponse = {};
   jsonResponse['direction'] = direction;
   jsonResponse['distance'] = null;
-  jsonResponse['duration'] = 250;
+  jsonResponse['duration'] = duration;
   jsonResponse['velocity'] = 30;
   
 
