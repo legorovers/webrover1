@@ -8,22 +8,14 @@ class WebRoverApiController {
 
 	def robotService
 	
-    def get() {
-		action(params.direction, params.duration as int)
-		def result = [result:'OK']
-		render result as JSON
-	}
-
-    def post() {
-//		def json = request.JSON
-//		println json
+    def command() {
 		println params.direction
 		println params.duration
 		action(params.direction, params.duration as int)
 		def result = [result:'OK']
 		render result as JSON
 	}
-	
+
 	def sense() {
 		def result = robotService.sense()
 		render result as JSON
@@ -32,4 +24,11 @@ class WebRoverApiController {
 	protected action(direction, duration) {
 		robotService.action(direction, duration)
 	}
+	
+	def delay() {
+		robotService.delay = params.delay as int
+		def result = [delay:robotService.delay]
+		render result as JSON
+	}
+
 }
