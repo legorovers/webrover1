@@ -1,22 +1,28 @@
 <html>
 	<head>
 		<title>Web Rover FTW!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<style>
 			body{
 				font:sans-serif;
 			}
+      canvas{
+        background-color: lightgrey;
+      }
 		</style>
 		<script type="text/javascript">
 		function startup() {
+      
 			var el = document.getElementsByTagName("canvas")[0];
 			el.addEventListener("touchstart", handleStart, false);
 			el.addEventListener("touchend", handleEnd, false);
 			el.addEventListener("touchcancel", handleCancel, false);
-			el.addEventListener("touchleave", handleLeave, false);
+			//el.addEventListener("touchleave", handleLeave, false);
 			el.addEventListener("touchmove", handleMove, false);
 		}
 
 function handleStart(evt) {
+  
   evt.preventDefault();
   var el = document.getElementsByTagName("canvas")[0];
   var ctx = el.getContext("2d");
@@ -34,13 +40,16 @@ function handleMove(evt) {
   var el = document.getElementsByTagName("canvas")[0];
   var ctx = el.getContext("2d");
   var touches = evt.changedTouches;
-   
+  
   ctx.lineWidth = 4;
          
   for (var i=0; i<touches.length; i++) {
+
     var color = colorForTouch(touches[i]);
     var idx = ongoingTouchIndexById(touches[i].identifier);
  
+    el.style.backgroundColor = color;
+
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.moveTo(ongoingTouches[idx].pageX, ongoingTouches[idx].pageY);
@@ -55,7 +64,7 @@ function handleEnd(evt) {
   var el = document.getElementsByTagName("canvas")[0];
   var ctx = el.getContext("2d");
   var touches = evt.changedTouches;
-   
+  document.getElementById('log').append(touches);
   ctx.lineWidth = 4;
          
   for (var i=0; i<touches.length; i++) {
@@ -94,10 +103,13 @@ function ongoingTouchIndexById(idToFind) {
 }  
 		</script>
 	</head>
-	<body>
+	<body onload='startup();'>
 		<h1>Web Rover</h1>
-		<canvas>
+		<canvas height="300px" style='width:100%; height:300px; border:1px solid black;'>
 			
 		</canvas>
+    <div id="log">
+
+    </div>
 	</body>
 </html>
