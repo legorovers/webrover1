@@ -1,6 +1,8 @@
 package webrover1
 
 import org.springframework.beans.factory.DisposableBean
+import org.springframework.beans.factory.InitializingBean
+
 import eass.mas.nxt.NXTBrick
 import eass.mas.nxt.BasicRobot
 import eass.mas.nxt.RoverUltrasonicSensor
@@ -11,12 +13,14 @@ import java.io.PrintStream
 import lejos.nxt.remote.RemoteMotor
 import lejos.robotics.navigation.DifferentialPilot
 
-class RobotService implements DisposableBean {
+class RobotService implements InitializingBean, DisposableBean {
 
 	def robot
-	
-	def RobotService() {
-		robot = new BasicRobot('noor', '00165312A8AB')
+	def grailsApplication
+
+    public void afterPropertiesSet() throws Exception {
+		def config = grailsApplication.config.nxt.robot
+		robot = new BasicRobot(config.name, config.address)
 		
 		if (robot.isConnected()) {
 		    /* Robot set up */
@@ -28,8 +32,10 @@ class RobotService implements DisposableBean {
 			pilot.setRotateSpeed(15);
 			robot.setPilot(pilot);
 			
-			RoverUltrasonicSensor uSensor = new RoverUltrasonicSensor(brick, 1);
-			robot.setSensor(1, uSensor);
+			if (config.sensor) {
+				RoverUltrasonicSensor uSensor = new RoverUltrasonicSensor(brick, 1);
+				robot.setSensor(1, uSensor);
+			}
 		}
 	}
 	
