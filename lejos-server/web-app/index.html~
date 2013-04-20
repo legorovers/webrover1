@@ -199,7 +199,6 @@
 			jsonResponse['direction'] = direction;
 			jsonResponse['distance'] = null;
 			jsonResponse['duration'] = duration * 5;
-			// convert force input to rover output - TODO move this server side
 			force = (force/100) * 50;
 			jsonResponse['velocity'] = force-1;
 			
