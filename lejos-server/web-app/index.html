@@ -1,6 +1,176 @@
 <html>
-<body>
-hello world
-</body>
-</html>
+	<head>
+		<title>Web Rover FTW!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<style>
+			body{
+				font:sans-serif;
+			}
+      canvas{
+        background-color: lightgrey;
+      }
+		</style>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+		<script type="text/javascript">
+		function startup() {
+      
+			var el = document.getElementsByTagName("canvas")[0];
+			el.addEventListener("touchstart", handleStart, false);
+			el.addEventListener("touchend", handleEnd, false);
+			el.addEventListener("touchcancel", handleCancel, false);
+			//el.addEventListener("touchleave", handleLeave, false);
+			el.addEventListener("touchmove", handleMove, false);
 
+			
+		}
+
+function handleStart(evt) {
+  
+  evt.preventDefault();
+  var el = document.getElementsByTagName("canvas")[0];
+  var ctx = el.getContext("2d");
+  var touches = evt.changedTouches;
+         
+  for (var i=0; i<touches.length; i++) {
+    ongoingTouches.push(touches[i]);
+    var color = colorForTouch(touches[i]);
+    ctx.fillStyle = color;
+    ctx.fillRect(touches[i].pageX-2, touches[i].pageY-2, 4, 4);
+  }
+}
+function handleMove(evt) {
+
+  evt.preventDefault();
+  var el = document.getElementsByTagName("canvas")[0];
+  var ctx = el.getContext("2d");
+  var touches = evt.changedTouches;
+  
+  ctx.lineWidth = 4;
+  
+
+  for (var i=0; i<touches.length; i++) {
+    var color = colorForTouch(touches[i]);
+    var idx = ongoingTouchIndexById(touches[i].identifier);
+    
+    el.style.backgroundColor = color;
+
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(ongoingTouches[idx].pageX, ongoingTouches[idx].pageY);
+    ctx.lineTo(touches[i].pageX, touches[i].pageY);
+    ctx.closePath();
+    ctx.stroke();
+    ongoingTouches.splice(idx, 1, touches[i]);  // swap in the new touch record
+  }
+}
+function handleEnd(evt) {
+  evt.preventDefault();
+  var el = document.getElementsByTagName("canvas")[0];
+  var ctx = el.getContext("2d");
+  var touches = evt.changedTouches;
+  
+  ctx.lineWidth = 4;
+         
+  for (var i=0; i<touches.length; i++) {
+
+    //document.getElementById('log').innerHTML = getCommandForPoint(touches[i].pageX, touches[i].pageY);
+    getCommandForPoint(touches[i].pageX, touches[i].pageY);
+    var color = colorForTouch(touches[i]);
+    var idx = ongoingTouchIndexById(touches[i].identifier);
+     
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(ongoingTouches[i].pageX, ongoingTouches[i].pageY);
+    ctx.lineTo(touches[i].pageX, touches[i].pageY);
+    ongoingTouches.splice(i, 1);  // remove it; we're done
+  }
+}
+function handleCancel(evt) {
+  evt.preventDefault();
+  var touches = evt.changedTouches;
+   
+  for (var i=0; i<touches.length; i++) {
+    ongoingTouches.splice(i, 1);  // remove it; we're done
+  }
+}
+function colorForTouch(touch) {
+  var id = touch.identifier;
+  id = id.toString(16); // make it a hex digit
+  return "#" + id + id + id;
+}
+function ongoingTouchIndexById(idToFind) {
+  for (var i=0; i<ongoingTouches.length; i++) {
+    var id = ongoingTouches[i].identifier;
+     
+    if (id == idToFind) {
+      return i;
+    }
+  }
+  return -1;    // not found
+}
+
+function getCommandForPoint(touchX, touchY)  
+{
+  //TODO: Get canvas elements poisition in screen
+  /*
+    {'direction':[left|right|forward|back|stop],
+    duration:'integer, milliseconds',
+    distance:'cm',
+    velocity:integer}
+  */
+
+  var canvas = document.getElementsByTagName('canvas')[0];
+  var centreX = canvas.width/2;
+  var centreY = canvas.height/2;
+  
+  if(touchX < 0){
+    touchX = 0;
+  }
+  if(touchY < 0){
+    touchY = 0;
+  }
+  var directionX = centreX - touchX;
+  var directionY = centreY - touchY;
+  var left = directionX > 0 ? true : false;
+  var up = directionY > 0 ? true : false;
+
+  var direction = 'stop';
+  //alert(up + '-' + left + ' - ' + directionX + '-' + directionY);
+  if(up && left){
+    direction = directionY > directionX ? 'forward' : 'left';
+  }
+  if(up && !left){
+    direction = directionY > -directionX ? 'forward' : 'right';
+  }
+  if(!up && left){
+    direction = -directionY > directionX ? 'backward' : 'left';
+  }
+  if(!up && !left){
+    direction = -directionY > -directionX ? 'backward' : 'right';
+    //direction =   96  < 299 
+  }
+  var jsonResponse = {};
+  jsonResponse['direction'] = direction;
+  jsonResponse['distance'] = null;
+  jsonResponse['duration'] = 250;
+  jsonResponse['velocity'] = 30;
+  
+
+  document.getElementById('log').innerHTML = JSON.stringify(jsonResponse);
+  $.post("api", jsonResponse, function(data){
+    console.log(data.result);
+  },"json");
+
+}
+		</script>
+	</head>
+	<body onload='startup();'>
+		<h1>Web Rover</h1>
+		<canvas height="300px" style='height:300px; border:1px solid black; position:fixed; top:0; left:0;'>
+			
+		</canvas>
+    <div id="log" style="margin-top:350px;">
+
+    </div>
+	</body>
+</html>
