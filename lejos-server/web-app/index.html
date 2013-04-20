@@ -20,6 +20,8 @@
 			el.addEventListener("touchcancel", handleCancel, false);
 			//el.addEventListener("touchleave", handleLeave, false);
 			el.addEventListener("touchmove", handleMove, false);
+
+			
 		}
 
 function handleStart(evt) {
@@ -135,18 +137,19 @@ function getCommandForPoint(touchX, touchY)
   var direction = 'stop';
   //alert(up + '-' + left + ' - ' + directionX + '-' + directionY);
   if(up && left){
-    direction = directionY > directionX ? 'up' : 'left';
+    direction = directionY > directionX ? 'forward' : 'left';
   }
   if(up && !left){
-    direction = directionY > -directionX ? 'up' : 'right';
+    direction = directionY > -directionX ? 'forward' : 'right';
   }
   if(!up && left){
-    direction = -directionY > directionX ? 'down' : 'left';
+    direction = -directionY > directionX ? 'backward' : 'left';
   }
   if(!up && !left){
-    direction = -directionY > -directionX ? 'down' : 'right';
+    direction = -directionY > -directionX ? 'backward' : 'right';
     //direction =   96  < 299 
   }
+
   if(direction == 'left'){
     duration = directionX *-1;
   }
@@ -161,6 +164,7 @@ function getCommandForPoint(touchX, touchY)
     duration = directionY * -1;
   }
 
+
   var jsonResponse = {};
   jsonResponse['direction'] = direction;
   jsonResponse['distance'] = null;
@@ -169,6 +173,9 @@ function getCommandForPoint(touchX, touchY)
   
 
   document.getElementById('log').innerHTML = JSON.stringify(jsonResponse);
+  $.post("api", jsonResponse, function(data){
+    console.log(data.result);
+  },"json");
 
 }
 		</script>
