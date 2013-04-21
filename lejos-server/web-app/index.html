@@ -1,14 +1,30 @@
 <html>
 	<head>
-		<title>Web Rover FTW!</title>
+		<title>WebRover1 FTW!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<style>
-			body{
-				font:sans-serif;
+			body {
+				margin:0;
+				padding: 0 10px 10px;
+				
+				font-family: sans-serif;
+				text-align: center;
 			}
-      canvas{
-        background-color: lightgrey;
-      }
+			h1 {
+				color: white;
+				background: black;
+				padding: 0.5em;
+				text-align: center;
+				margin: 0 -10px 5px;
+			}
+			canvas{
+				background-color: lightgrey;
+			  }
+			 #dpad canvas {
+			 	background: white url(images/d-pad.gif) no-repeat center center;
+				border-radius: 100%;
+				border: 1px dashed #333;
+			 }
 		</style>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 		<script type="text/javascript">
@@ -22,8 +38,14 @@
 			//el.addEventListener("touchleave", handleLeave, false);
 			el.addEventListener("touchmove", handleMove, false);
 
-			//setInterval(function(){refreshImg()}, 1000);
-			//setInterval(function(){checkSensor()}, 1000);
+			el.addEventListener("mousedown", handleStart, false);
+			el.addEventListener("mouseup", handleEnd, false);
+			el.addEventListener("mouseout", handleCancel, false);
+			//el.addEventListener("touchleave", handleLeave, false);
+			el.addEventListener("mousemove", handleMove, false);
+
+			setInterval(function(){refreshImg()}, 500);
+			setInterval(function(){checkSensor()}, 1000);
 
 		}
 		
@@ -66,9 +88,9 @@
 			var el = document.getElementsByTagName("canvas")[0];
 			var ctx = el.getContext("2d");
 			var touches = evt.changedTouches;
-		
+		  
 			ctx.lineWidth = 4;
-		
+		  
 			for (var i=0; i<touches.length; i++) {
 				// call function to update rover
 				control.commandCont(touches[i]);
@@ -111,6 +133,7 @@
 				ongoingTouches.splice(i, 1);  // remove it; we're done*/
 			}
 		}
+
 		function handleCancel(evt)
 		{
 			evt.preventDefault();
@@ -120,12 +143,14 @@
 				ongoingTouches.splice(i, 1);  // remove it; we're done
 			}*/
 		}
+
 		/*function colorForTouch(touch)
 		{
 			var id = touch.identifier;
 			id = id.toString(16); // make it a hex digit
 			return "#" + id + id + id;
 		}
+
 		function ongoingTouchIndexById(idToFind)
 		{
 			for (var i=0; i<ongoingTouches.length; i++) {
@@ -151,10 +176,10 @@
 			var canvas = document.getElementsByTagName('canvas')[0];
 			var centreX = canvas.width/2;
 			var centreY = canvas.height/2;
-			//alert(canvas.offsetX);
+      
 			touchX = touchX - canvas.offsetLeft;
 			touchY = touchY - canvas.offsetTop;
-
+      
 			//reset if outside bounds
 			if(touchX < 0){
 				touchX = 0;
@@ -175,7 +200,7 @@
 			var forward = directionY > 0 ? true : false;
 			var duration = 250;
 			var direction = 'stop';
-
+      
 			// work out direction
 			if(forward && left){
 				direction = directionY > directionX ? 'forward' : 'left';
@@ -189,8 +214,7 @@
 			if(!forward && !left){
 				direction = -directionY > -directionX ? 'backward' : 'right';
 			}
-document.getElementById('log').innerHTML = '<br>direction:'+direction;
-
+      
 			// set duration
 			if(direction == 'left'){
 				duration = directionX;
@@ -204,8 +228,8 @@ document.getElementById('log').innerHTML = '<br>direction:'+direction;
 			if (direction == 'backward') {
 				duration = -directionY;
 			}
-//document.getElementById('log').innerHTML = direction+' - '+duration;
-			// create JSON response
+      
+      // create JSON response
 			var jsonResponse = {};
 			jsonResponse['direction'] = direction;
 			jsonResponse['distance'] = null;
@@ -233,12 +257,33 @@ document.getElementById('log').innerHTML = '<br>direction:'+direction;
 		</script>
 	</head>
 	<body onload='startup();'>
-		<canvas height="300px" style='height:300px; border:1px solid black;'>
-			
+    <div class="content"  style="position: relative">
+		<h1>WebRover1</h1>
+     <div id="dpad">
+     	<p><small>Drive me</small></p>
+		<canvas height="300px" style='height:300px;'>
 		</canvas>
-    <div id="log" style="margin-top:0px; height:30px;background:#0f0;"></div>
+    </div>
+    <div id="settings">
+    	<form>
+        	<p>
+            	<label>Time delay</label>
+                <select>
+                	<option value="0">None</option>
+                    <option value="0.5">0.5 sec</option>
+                    <option value="1">1 sec</option>
+                    <option value="1.3">Earth>Moon: 1.3 sec</option>
+                    <option value="360">Earth>Mars: 3 min</option>
+                </select>
+                <input name="Set" type="submit" value="Set">
+            </p>
+        </form>
+    </div>
+    <p><small>What I can see</small></p>
     <div id="sensor"></div>
 
-    <img id="video" src="video.jpg"/>
+        <!-- TODO: Remove the hard coded IP Address -->
+        <img id="video" src="video.jpg"/>
+    <div id="log"></div>
 	</body>
 </html>

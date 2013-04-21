@@ -10,6 +10,7 @@ class UrlMappings {
 		"/api/$direction?/$duration?"(controller:'WebRoverApi', action:[GET:'command', POST:'command'], parseRequest:true)
 		"/api/sense"(controller:'WebRoverApi', action:[GET:'sense'])
 		"/api/delay/$delay?"(controller:'WebRoverApi', action:[GET:'delay'])
+		"/api/rule/$type/$sensor/$threshold?"(controller:'WebRoverApi', action:[GET:'rule'])
 		
 		"/"(controller:'WebRoverUi', action:[GET:'html'])
 		"/snapshot"(controller:'WebRoverUi', action:[GET:'snapshot'])

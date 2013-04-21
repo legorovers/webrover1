@@ -30,5 +30,13 @@ class WebRoverApiController {
 		def result = [delay:robotService.delay]
 		render result as JSON
 	}
+	
+	def rule() {
+		robotService.rule = params.type as int
+		robotService.sensor = params.sensor
+		robotService.threshold = params.threshold as int
+		def result = [result:'OK']
+		render result as JSON
+	}
 
 }

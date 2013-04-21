@@ -13,8 +13,9 @@ import grails.converters.JSON
 
 import java.io.PrintStream
 import java.util.concurrent.ArrayBlockingQueue
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 import lejos.nxt.remote.RemoteMotor
 import lejos.robotics.navigation.DifferentialPilot
@@ -26,6 +27,9 @@ class RobotService implements InitializingBean, DisposableBean {
 	def delay = 0
 	def running = true
 	def grailsApplication
+	def rule = 0
+	def sensor = 'touch'
+	def threshold = 0
 
     public void afterPropertiesSet() throws Exception {
 		def config = grailsApplication.config.nxt.robot
@@ -55,15 +59,16 @@ class RobotService implements InitializingBean, DisposableBean {
 				robot.setSensor(1, lSensor);
 			}
 		}
-		delayThread = Executors.newFixedThreadPool(1)
-		commands = new ArrayBlockingQueue(1)
+		delayThread = Executors.newScheduledThreadPool(1)
+		commands = new ArrayBlockingQueue(100)
 		def th = Thread.start {
 			while (running) {
 				def recent = []
 				commands.drainTo(recent)
 				
 				if (recent.size()) {
-					def command = recent[0]
+					println recent.size()
+					def command = recent[-1]
 					println command.direction
 					def duration = command.duration
 					println duration
@@ -82,16 +87,46 @@ class RobotService implements InitializingBean, DisposableBean {
 							break
 						case 'stop':
 							duration = 0
-							//robot.pilot.stop()
 							break
 					}
+					
 					while (duration > 0 && commands.size() == 0) {
 						Thread.sleep(10)
 						duration -= 10
+						
+						if (rule == 1) {
+							def obstacle = false
+			    			if (sensor.equals('ultrasonic')) {
+			    				def distance = ((RoverUltrasonicSensor) robot.getSensor(1)).distance()
+			    				println("$distance")
+			    				if (distance < threshold) {
+			    				    obstacle = true
+			    				}
+							} else if (sensor.equals('touch')) {
+								def bump = ((RoverTouchSensor) robot.getSensor(1)).isPressed()
+								if (bump) {
+									obstacle = true
+								}
+//							} else if (config.sensor.equals('sound')) {
+//							    def value = ((RoverSoundSensor) robot.getSensor(1)).readValue()
+//							} else if (config.sensor.equals('light')) {
+//								def value = ((RoverLightSensor) robot.getSensor(1)).getLightValue();
+							}
+							
+							if (obstacle) {
+								duration = 0
+								println("$duration")
+							}
+						}
+
 					}
-					robot.pilot.stop()
+					if (commands.size() == 0) {
+						robot.pilot.stop()
+					}
 				}
-				Thread.sleep(100)
+				if (commands.size() == 0) {
+					Thread.sleep(100)
+				}
 			}
 		}
 		
@@ -99,12 +134,9 @@ class RobotService implements InitializingBean, DisposableBean {
 	
 	def delayThread 
 	def action(direction, duration) {
-		delayThread.submit({->
-			if (delay > 0) {
-				Thread.sleep(delay)
-			}		
+		delayThread.schedule({
 			commands.put([direction:direction, duration:duration])
-		} as Callable)
+		} as Runnable, delay, TimeUnit.MILLISECONDS)
 	}
 	
 	def sense() {
