@@ -2,8 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Untitled Document</title>
+<title>Lego Rover Rule Builder</title>
 <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
+<link type="text/css" href="ui-lightness	/jquery-ui-1.8.23.custom.css" rel="Stylesheet"/>
 
 <style>
 
@@ -87,13 +88,13 @@ ul button, ol button {
     	<small>Drag and drop an event to your rule</small>
   </p>
     <ul class="ico" id="event">
-    	<li id="eventObstacle" class="ruleOpt">
+    	<li id="eventObstacle" class="ruleOpt Obstacle">
         	<span class="ui-btn-inner">Obstacle</span>
         </li>
-    	<li id="eventHole" class="ruleOpt">
+    	<li id="eventHole" class="ruleOpt Hole">
         	<span class="ui-btn-inner">Hole</span>
         </li>
-    	<li id="eventExplode" class="ruleOpt">
+    	<li id="eventExplode" class="ruleOpt Explosion">
         	<span class="ui-btn-inner">Explosion</span>
         </li>
     </ul>
@@ -102,19 +103,19 @@ ul button, ol button {
     	<small>Drag and drop one or more actions to your rule</small>
   </p>
     <ul class="ico" id="action">
-    	<li id="actionF" class="ruleOpt">
+    	<li id="actionF" class="ruleOpt Forward">
         	<span class="ui-btn-inner">Forward</span>
         </li>
-    	<li id="actionB" class="ruleOpt">
+    	<li id="actionB" class="ruleOpt Back">
         	<span class="ui-btn-inner">Back</span>
         </li>
-    	<li id="actionL" class="ruleOpt">
+    	<li id="actionL" class="ruleOpt Left">
         	<span class="ui-btn-inner">Left</span>
         </li>
-    	<li id="actionR" class="ruleOpt">
+    	<li id="actionR" class="ruleOpt Right">
         	<span class="ui-btn-inner">Right</span>
         </li>
-    	<li id="actionS" class="ruleOpt">
+    	<li id="actionS" class="ruleOpt Stop">
         	<span class="ui-btn-inner">Stop</span>
         </li>
     </ul>
@@ -140,6 +141,57 @@ ul button, ol button {
 	</div>
 </div>
 
+<div id="obstacleDialog" title="Obstacle Options">
+    <p>There is an Obstacle if...
+        <li>The Ultrasonic Sensor detects and object within <input type="text">10</input> cms</li>
+        <li>The Touch Sensor touches something</li>
+    </p>
+</div>
+
+<div id="holeDialog" title="Hole Options">
+    <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
+        with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
+    </p>
+</div>
+
+<div id="explosionDialog" title="Explosion Options">
+    <p>There is an explosion if the sound is louder than [slider]
+    </p>
+</div>
+
+<div id="forwardDialog" title="Forward Options">
+    <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
+        with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
+    </p>
+</div>
+
+<div id="backDialog" title="Back Options">
+    <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
+        with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
+    </p>
+</div>
+
+
+<div id="leftDialog" title="Left Options">
+    <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
+        with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
+    </p>
+</div>
+
+<div id="rightDialog" title="Right Options">
+    <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
+        with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
+    </p>
+</div>
+
+<div id="stopDialog" title="Stop Options">
+    <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
+        with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
+    </p>
+</div>
+
+
+
 <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 <!--script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script-->
@@ -147,16 +199,154 @@ ul button, ol button {
 <script>
 	$(function() {
 		$( ".ruleOpts" ).sortable ({
-			revert: true
+			revert: true,
+            update: function (event, ui) {
+                $(ui.item).click(function(e) {
+                    console.log($(this).attr('class'));
+                    if ($(this).hasClass('Obstacle')) {
+                        $("#obstacleDialog").dialog("open");
+                    }
+                    if ($(this).hasClass('Explosion')) {
+                        $("#explosionDialog").dialog("open");
+                    }
+                    if ($(this).hasClass('Hole')) {
+                        $("#holeDialog").dialog("open");
+                    }
+                    if ($(this).hasClass('Forward')) {
+                        $("#forwardDialog").dialog("open");
+                    }
+                    if ($(this).hasClass('Back')) {
+                        $("#backDialog").dialog("open");
+                    }
+
+                    if ($(this).hasClass('Left')) {
+                        $("#leftDialog").dialog("open");
+                    }
+                    if ($(this).hasClass('Right')) {
+                        $("#rightDialog").dialog("open");
+                    }
+                    if ($(this).hasClass('Stop')) {
+                        $("#stopDialog").dialog("open");
+                    }
+                })  ;
+            }
 		});
-		$( ".ruleOpt" ).draggable({ 
+        $( ".ruleOpt" ).draggable({
 			connectToSortable: ".ruleOpts",
-			//snap: ".snaptarget",
-			//snapMode: "inner",
 			helper: "clone",
 			revert: "invalid"
 		});
 		$("ul,li,ol").disableSelection();
+   });
+
+   $(document).ready(function () {
+       $('#explosionDialog').dialog({
+           autoOpen: false,
+           modal: false,
+           resizable: false,
+           buttons: {
+               "Confirm": function () {
+                   $(this).dialog("close");
+               },
+               "Cancel": function () {
+                   $(this).dialog("close");
+               }
+           }
+       });
+       $('#obstacleDialog').dialog({
+           autoOpen: false,
+           modal: false,
+           resizable: false,
+           buttons: {
+               "Confirm": function () {
+                   $(this).dialog("close");
+               },
+               "Cancel": function () {
+                   $(this).dialog("close");
+               }
+           }
+       });
+       $('#holeDialog').dialog({
+           autoOpen: false,
+           modal: false,
+           resizable: false,
+           buttons: {
+               "Confirm": function () {
+                   $(this).dialog("close");
+               },
+               "Cancel": function () {
+                   $(this).dialog("close");
+               }
+           }
+       });
+
+       $('#forwardDialog').dialog({
+           autoOpen: false,
+           modal: false,
+           resizable: false,
+           buttons: {
+               "Confirm": function () {
+                   $(this).dialog("close");
+               },
+               "Cancel": function () {
+                   $(this).dialog("close");
+               }
+           }
+       });
+       $('#backDialog').dialog({
+           autoOpen: false,
+           modal: false,
+           resizable: false,
+           buttons: {
+               "Confirm": function () {
+                   $(this).dialog("close");
+               },
+               "Cancel": function () {
+                   $(this).dialog("close");
+               }
+           }
+       });
+
+
+       $('#leftDialog').dialog({
+           autoOpen: false,
+           modal: false,
+           resizable: false,
+           buttons: {
+               "Confirm": function () {
+                   $(this).dialog("close");
+               },
+               "Cancel": function () {
+                   $(this).dialog("close");
+               }
+           }
+       });
+       $('#rightDialog').dialog({
+           autoOpen: false,
+           modal: false,
+           resizable: false,
+           buttons: {
+               "Confirm": function () {
+                   $(this).dialog("close");
+               },
+               "Cancel": function () {
+                   $(this).dialog("close");
+               }
+           }
+       });
+       $('#stopDialog').dialog({
+           autoOpen: false,
+           modal: false,
+           resizable: false,
+           buttons: {
+               "Confirm": function () {
+                   $(this).dialog("close");
+               },
+               "Cancel": function () {
+                   $(this).dialog("close");
+               }
+           }
+       });
    });
 </script>
 </body>
