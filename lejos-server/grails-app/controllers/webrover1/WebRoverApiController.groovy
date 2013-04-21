@@ -36,6 +36,7 @@ class WebRoverApiController {
 		robotService.rule = params.type as int
 		robotService.sensor = params.sensor
 		robotService.threshold = params.threshold as int
+		println "rule: $robotService.rule $robotService.sensor $robotService.threshold"
 		def result = [result:'OK']
 		render result as JSON
 	}

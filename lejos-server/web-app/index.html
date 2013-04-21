@@ -44,6 +44,9 @@
 				// post JSON to WebRover API
 				$.getJSON('api/delay/' + $('#delay').val());
 			});
+			$('#rule').change(function() {
+				$.getJSON('api/rule/' + $('#rule').val() + '/ultrasonic/50');
+			});
 			
 			$(document).keydown(function(e){
 				var jsonResponse = {};
@@ -309,6 +312,16 @@ $.getJSON('api/sense', function(data) {
                     <option value="36000">Earth>Mars: 3 min</option>
                 </select>
             </p>
+        </form>
+        
+        <form>
+        	<p>
+        		<label>Obstacle Rule</label>
+        		<select id="rule">
+        			<option value="0">Off</option>
+        			<option value="1">On</option>
+        		</select>
+        	</p>
         </form>
     </div>
     <p><small>What I can see</small></p>
