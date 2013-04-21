@@ -3,12 +3,6 @@ package webrover1
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.InitializingBean
 
-import eass.mas.nxt.NXTBrick
-import eass.mas.nxt.BasicRobot
-import eass.mas.nxt.RoverUltrasonicSensor
-import eass.mas.nxt.RoverTouchSensor
-import eass.mas.nxt.RoverSoundSensor
-import eass.mas.nxt.RoverLightSensor
 import grails.converters.JSON
 
 import java.io.PrintStream
@@ -16,9 +10,6 @@ import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-
-import lejos.nxt.remote.RemoteMotor
-import lejos.robotics.navigation.DifferentialPilot
 
 class RobotService implements InitializingBean, DisposableBean {
 
@@ -33,32 +24,8 @@ class RobotService implements InitializingBean, DisposableBean {
 
     public void afterPropertiesSet() throws Exception {
 		def config = grailsApplication.config.nxt.robot
-		robot = new BasicRobot(config.name, config.address)
-		
-		if (robot.isConnected()) {
-		    /* Robot set up */
-			def brick = robot.getBrick();
-			def claudia_motorLeft = brick.getMotorC();
-			def claudia_motorRight = brick.getMotorA();
-			def pilot = new DifferentialPilot(5, 11, claudia_motorLeft, claudia_motorRight);
-			pilot.setTravelSpeed(10);
-			pilot.setRotateSpeed(15);
-			robot.setPilot(pilot);
-			
-			if (config.sensor.equals('ultrasonic')) {
-				RoverUltrasonicSensor uSensor = new RoverUltrasonicSensor(brick, 1);
-				robot.setSensor(1, uSensor);
-			} else if (config.sensor.equals('touch')) {
-			    RoverTouchSensor tSensor = new RoverTouchSensor(brick, 1);
-			    robot.setSensor(1, tSensor);
-			} else if (config.sensor.equals('sound')) {
-			 	RoverSoundSensor sSensor = new RoverSoundSensor(brick, 1);
-			 	robot.setSensor(1, sSensor);
-			} else if (config.sensor.equals('light')) {
-				RoverLightSensor lSensor = new RoverLightSensor(brick, 1);
-				robot.setSensor(1, lSensor);
-			}
-		}
+		robot = config.type == 'imp' ? new ImpRobot() : new NXTRobot()
+		robot.setup(config)
 		delayThread = Executors.newScheduledThreadPool(1)
 		commands = new ArrayBlockingQueue(100)
 		def th = Thread.start {
@@ -74,16 +41,16 @@ class RobotService implements InitializingBean, DisposableBean {
 					println duration
 					switch (command.direction) {
 						case 'forward':
-							robot.pilot.forward()
+							robot.forward()
 							break
 						case 'left':
-							robot.pilot.rotateLeft()
+							robot.left()
 							break
 						case 'right':
-							robot.pilot.rotateRight()
+							robot.right()
 							break
 						case 'backward':
-							robot.pilot.backward()
+							robot.backward()
 							break
 						case 'stop':
 							duration = 0
@@ -97,13 +64,13 @@ class RobotService implements InitializingBean, DisposableBean {
 						if (rule == 1) {
 							def obstacle = false
 			    			if (sensor.equals('ultrasonic')) {
-			    				def distance = ((RoverUltrasonicSensor) robot.getSensor(1)).distance()
+			    				def distance = robot.distance()
 			    				println("$distance")
 			    				if (distance < threshold) {
 			    				    obstacle = true
 			    				}
 							} else if (sensor.equals('touch')) {
-								def bump = ((RoverTouchSensor) robot.getSensor(1)).isPressed()
+								def bump = robot.pressed()
 								if (bump) {
 									obstacle = true
 								}
@@ -121,7 +88,7 @@ class RobotService implements InitializingBean, DisposableBean {
 
 					}
 					if (commands.size() == 0) {
-						robot.pilot.stop()
+						robot.stop()
 					}
 				}
 				if (commands.size() == 0) {
@@ -141,25 +108,11 @@ class RobotService implements InitializingBean, DisposableBean {
 	
 	def sense() {
 		def config = grailsApplication.config.nxt.robot
-	
-	    int sensornumber = 1;
-	    if (config.sensor.equals('ultrasonic')) {
-	    	def distance = ((RoverUltrasonicSensor) robot.getSensor(1)).distance()
-			return [distance:distance]
-		} else if (config.sensor.equals('touch')) {
-			def bump = ((RoverTouchSensor) robot.getSensor(1)).isPressed()
-			return [pressed:bump]
-		} else if (config.sensor.equals('sound')) {
-		    def value = ((RoverSoundSensor) robot.getSensor(1)).readValue()
-		    return [sound:value]
-		} else if (config.sensor.equals('light')) {
-			def value = ((RoverLightSensor) robot.getSensor(1)).getLightValue();
-			return [light:value]
-		}
+		return robot.sense(config)
 	}
 
     void destroy() throws Exception {
 		running = false
-		robot.close()
+		robot.teardown()
     }
 }
