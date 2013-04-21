@@ -137,6 +137,19 @@ function handleEnd(evt)
 		// call function to update rover end touch
 		control.commandSing(touches[i]);
 	}
+	// create JSON response
+	var jsonResponse = {};
+	jsonResponse['direction'] = 'stop';
+	jsonResponse['distance'] = null;
+	jsonResponse['duration'] = 0;
+	// convert force input to rover output - TODO move this server side
+	force = (force/100) * 50;
+	jsonResponse['velocity'] = force-1;
+
+	// post JSON to WebRover API
+	$.post("api", jsonResponse, function(data){
+		console.log(data.result);
+	},"json");
 }
 function handleCancel(evt)
 {
