@@ -87,29 +87,30 @@ class RobotService implements InitializingBean, DisposableBean {
 							break
 					}
 					
-					def obstacle = false
-	    			if (config.sensor.equals('ultrasonic')) {
-	    				def distance = ((RoverUltrasonicSensor) robot.getSensor(1)).distance()
-	    				println("$distance")
-	    				if (distance < 50) {
-	    				    obstacle = true
-	    				}
-					} else if (config.sensor.equals('touch')) {
-						def bump = ((RoverTouchSensor) robot.getSensor(1)).isPressed()
-					} else if (config.sensor.equals('sound')) {
-					    def value = ((RoverSoundSensor) robot.getSensor(1)).readValue()
-					} else if (config.sensor.equals('light')) {
-						def value = ((RoverLightSensor) robot.getSensor(1)).getLightValue();
-					}
-					
-					if (obstacle) {
-						duration = 1
-						println("$duration")
-					}
-
 					while (duration > 0 && commands.size() == 0) {
 						Thread.sleep(10)
 						duration -= 10
+
+						def obstacle = false
+		    			if (config.sensor.equals('ultrasonic')) {
+		    				def distance = ((RoverUltrasonicSensor) robot.getSensor(1)).distance()
+		    				println("$distance")
+		    				if (distance < 50) {
+		    				    obstacle = true
+		    				}
+						} else if (config.sensor.equals('touch')) {
+							def bump = ((RoverTouchSensor) robot.getSensor(1)).isPressed()
+						} else if (config.sensor.equals('sound')) {
+						    def value = ((RoverSoundSensor) robot.getSensor(1)).readValue()
+						} else if (config.sensor.equals('light')) {
+							def value = ((RoverLightSensor) robot.getSensor(1)).getLightValue();
+						}
+						
+						if (obstacle) {
+							duration = 0
+							println("$duration")
+						}
+
 					}
 					if (commands.size() == 0) {
 						robot.pilot.stop()
