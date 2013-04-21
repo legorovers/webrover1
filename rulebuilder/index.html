@@ -151,14 +151,24 @@ ul button, ol button {
 
 <div id="obstacleDialog" title="Obstacle Options" class="dialog">
     <p>There is an Obstacle if...
-        <li>The Ultrasonic Sensor detects and object within <input type="text">10</input> cms</li>
-        <li>The Touch Sensor touches something</li>
+        <li>
+          <p>
+            <input name="obstacle" type="radio" value="" /> 
+            The Ultrasonic Sensor detects an object within <input type="text" style="width: 30px">&nbsp;cms</p>
+        </li>
+        <li>
+          <p>
+            <input name="obstacle" type="radio" value="" /> 
+            Or, the Touch Sensor touches something
+          </p>
+        </li>
     </p>
 </div>
 
 <div id="holeDialog" title="Hole Options" class="dialog">
-    <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
-        with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
+    <p>Reset the clock to  minutes
+        with a warning at 
+      <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
     </p>
 </div>
 
