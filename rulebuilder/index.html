@@ -19,7 +19,7 @@
 
 .opts {
 	float: left;
-	width: 65%
+	width: 65%;
 }
 
 .rule {
@@ -29,6 +29,7 @@
 	padding-right: 2%;
 	border-left: 1px dotted #ccc;
 	background: #ccc;
+	min-height: 500px;
 }
 ul, ol, li {
 	list-style: none;
@@ -61,6 +62,7 @@ ul, ol, li {
 	border: 2px solid #ccc;
 	border-radius: 1em; 	
 	background: white;
+	cursor: pointer;
 }
 .ruleOpts .ui-btn-inner {
 	border-width: 2px;
@@ -83,6 +85,77 @@ ul button, ol button {
 }
 .ui-dialog {
 	background:white !important;
+}
+div.ui-slider {
+	height: 10px;
+}
+.btn {
+display: inline-block;
+padding: 4px 12px;
+margin-bottom: 0;
+font-size: 14px;
+line-height: 20px;
+color: #333333;
+text-align: center;
+text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+vertical-align: middle;
+cursor: pointer;
+background-color: #f5f5f5;
+background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
+background-repeat: repeat-x;
+border: 1px solid #cccccc;
+border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+border-bottom-color: #b3b3b3;
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0);
+filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary {
+color: #ffffff;
+text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+background-color: #006dcc;
+background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
+background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
+background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
+background-image: -o-linear-gradient(top, #0088cc, #0044cc);
+background-image: linear-gradient(to bottom, #0088cc, #0044cc);
+background-repeat: repeat-x;
+border-color: #0044cc #0044cc #002a80;
+border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0044cc', GradientType=0);
+filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+.btn:hover,
+.btn:focus {
+  color: #333333;
+  text-decoration: none;
+  background-position: 0 -15px;
+  -webkit-transition: background-position 0.1s linear;
+     -moz-transition: background-position 0.1s linear;
+       -o-transition: background-position 0.1s linear;
+          transition: background-position 0.1s linear;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary.disabled,
+.btn-primary[disabled] {
+  color: #ffffff;
+  background-color: #0044cc;
+  *background-color: #003bb3;
 }
 </style>
 
@@ -142,15 +215,16 @@ ul button, ol button {
         </li>
     </ol>
    <div class="save">
-        <button data-theme="b">Save</button>
-        <button>Cancel</button>
+        <button class="btn btn-primary">Save</button>
+        <button class="btn">Cancel</button>
 	</div>
 </div>
 
 </div><!-- /end .main -->
 
 <div id="obstacleDialog" title="Obstacle Options" class="dialog">
-    <p>There is an Obstacle if...
+    <h3>There is an Obstacle if...        </h3>
+      <ul>
         <li>
           <p>
             <input name="obstacle" type="radio" value="" /> 
@@ -162,50 +236,64 @@ ul button, ol button {
             Or, the Touch Sensor touches something
           </p>
         </li>
-    </p>
+    </ul>
 </div>
 
 <div id="holeDialog" title="Hole Options" class="dialog">
-    <p>Reset the clock to  minutes
-        with a warning at 
-      <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
-    </p>
+    <h3>There is a hole if &hellip;</h3>
+    <P>The ground is darker than:</P>
+    	<div id="expSlider" class="slider"></div>
+        <small style="float:left; display:block">Bright sunlight</small>
+<small style="float:right; display:block">Pitch black</small></div>
 </div>
 
 <div id="explosionDialog" title="Explosion Options" class="dialog">
-    <p>There is an explosion if the sound is louder than <div id="expSlider"></div>
-    </p>
+    <h3>There is an explosion if &hellip;</h3>
+    <P>There is a noise louder than:</P>
+    	<div id="expSlider" class="slider"></div>
+        <small style="float:left; display:block">Silent</small>
+<small style="float:right; display:block">Deafening</small></div>
 </div>
 
 <div id="forwardDialog" title="Forward Options">
-    <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
-        with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
-    </p>
+    <h3>Speed:</h3>
+    	<div class="slider"></div>
+        <small style="float:left; display:block">Very slow</small>
+    <small style="float:right; display:block">Very Fast</small>
+	<p style="clear:both"><small>Optional:</small><br />
+    <input name="" type="checkbox" value="" /> Stop after 
+	  <input type="text" style="width: 30px" /> 
+	  cms
+	</p>
 </div>
 
 <div id="backDialog" title="Back Options">
-    <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
-        with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
-    </p>
+    <h3>Speed:</h3>
+    	<div class="slider"></div>
+        <small style="float:left; display:block">Very slow</small>
+    <small style="float:right; display:block">Very Fast</small>
+	<p style="clear:both"><small>Optional:</small><br />
+    <input name="" type="checkbox" value="" /> Stop after 
+	  <input type="text" style="width: 30px" /> 
+	  cms
+	</p>
 </div>
 
 
 <div id="leftDialog" title="Left Options">
-    <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
-        with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
-    </p>
+	<p style="clear:both">Turn <input type="text" style="width: 30px" /> 
+	  degrees
+	</p>
 </div>
 
 <div id="rightDialog" title="Right Options">
-    <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
-        with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
-    </p>
+	<p style="clear:both">Turn <input type="text" style="width: 30px" /> 
+	  degrees
+	</p>
 </div>
 
 <div id="stopDialog" title="Stop Options">
-    <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
-        with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
-    </p>
+    <p>Stop</p>
 </div>
 
 
@@ -258,7 +346,7 @@ ul button, ol button {
    });
 
    $(document).ready(function () {
-       $('#expSlider').slider();
+       $('.slider').slider();
 
        $('#explosionDialog').dialog({
            autoOpen: false,
