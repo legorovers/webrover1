@@ -58,6 +58,12 @@ distance:'cm',
 velocity:integer}
 ````
 
+## 'Video'
+
+Added Android camera running IP Webcam (address hardwired into HTML page at the moment)
+http://lifehacker.com/5650095/ip-webcam-turns-your-android-phone-into-a-remote-camera
+
+
 ## UI Sketches
 
 ### Main drive screen
