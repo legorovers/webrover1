@@ -173,7 +173,7 @@ ul button, ol button {
 </div>
 
 <div id="explosionDialog" title="Explosion Options" class="dialog">
-    <p>There is an explosion if the sound is louder than [slider]
+    <p>There is an explosion if the sound is louder than <div id="expSlider"></div>
     </p>
 </div>
 
@@ -258,6 +258,8 @@ ul button, ol button {
    });
 
    $(document).ready(function () {
+       $('#expSlider').slider();
+
        $('#explosionDialog').dialog({
            autoOpen: false,
            modal: false,
