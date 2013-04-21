@@ -3,9 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Lego Rover Rule Builder</title>
-<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
-<link type="text/css" href="ui-lightness	/jquery-ui-1.8.23.custom.css" rel="Stylesheet"/>
 
+<!--link type="text/css" href="ui-lightness//jquery-ui-1.8.23.custom.css" rel="Stylesheet"/ -->
+<link type="text/css" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"/>
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
 <style>
 
 .ui-mobile [data-role=page], .ui-mobile [data-role=dialog], .ui-page, body {
@@ -155,7 +156,7 @@ ul button, ol button {
 </div>
 
 <div id="explosionDialog" title="Explosion Options">
-    <p>There is an explosion if the sound is louder than [slider]
+    <p>There is an explosion if the sound is louder than <div id="explosionSlider"></div>
     </p>
 </div>
 
@@ -240,6 +241,8 @@ ul button, ol button {
    });
 
    $(document).ready(function () {
+       $('#explosionSlider').slider();
+
        $('#explosionDialog').dialog({
            autoOpen: false,
            modal: false,
