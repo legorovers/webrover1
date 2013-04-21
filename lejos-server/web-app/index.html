@@ -2,20 +2,10 @@
 	<head>
 		<title>WebRover1 FTW!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link type="text/css" href="style.css" rel="Stylesheet"/>
 		<style>
 			body {
-				margin:0;
-				padding: 0 10px 10px;
-				
-				font-family: sans-serif;
 				text-align: center;
-			}
-			h1 {
-				color: white;
-				background: black;
-				padding: 0.5em;
-				text-align: center;
-				margin: 0 -10px 5px;
 			}
 			canvas{
 				background-color: lightgrey;
@@ -53,18 +43,22 @@
 				jsonResponse['duration'] = 100;
 			    switch(e.which) {
 			        case 37: // left
+			        case 65: // a
 					jsonResponse['direction'] = 'left';
 			        break;
 			
 			        case 38: // up
+			        case 87: // w
 					jsonResponse['direction'] = 'forward';
 			        break;
 			
 			        case 39: // right
+			        case 68: // d
 					jsonResponse['direction'] = 'right';
 			        break;
 			
 			        case 40: // down
+			        case 83: // s
 					jsonResponse['direction'] = 'backward';
 			        break;
 			

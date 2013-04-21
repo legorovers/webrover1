@@ -1,0 +1,17 @@
+/* Universal CSS for WebRover1 UI 
+ */
+
+body {
+	margin:0;
+	padding: 0 10px 10px;
+	
+	font-family: sans-serif;
+}
+h1 {
+	color: white;
+	background: black;
+	padding: 0.5em;
+	text-align: center;
+	margin: 0 -10px 5px;
+}
+
