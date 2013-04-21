@@ -103,10 +103,10 @@ ul button, ol button {
     	<small>Drag and drop one or more actions to your rule</small>
   </p>
     <ul class="ico" id="action">
-    	<li id="actionF" class="ruleOpt">
+    	<li id="actionF" class="ruleOpt Forward">
         	<span class="ui-btn-inner">Forward</span>
         </li>
-    	<li id="actionB" class="ruleOpt">
+    	<li id="actionB" class="ruleOpt Back">
         	<span class="ui-btn-inner">Back</span>
         </li>
     	<li id="actionL" class="ruleOpt Left">
@@ -115,7 +115,7 @@ ul button, ol button {
     	<li id="actionR" class="ruleOpt Right">
         	<span class="ui-btn-inner">Right</span>
         </li>
-    	<li id="actionS" class="ruleOpt">
+    	<li id="actionS" class="ruleOpt Stop">
         	<span class="ui-btn-inner">Stop</span>
         </li>
     </ul>
@@ -159,17 +159,37 @@ ul button, ol button {
     </p>
 </div>
 
-<div id="leftDialog" title="Left">
+<div id="forwardDialog" title="Forward Options">
     <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
         with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
     </p>
 </div>
 
-<div id="rightDialog" title="Right">
+<div id="backDialog" title="Back Options">
     <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
         with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
     </p>
 </div>
+
+
+<div id="leftDialog" title="Left Options">
+    <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
+        with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
+    </p>
+</div>
+
+<div id="rightDialog" title="Right Options">
+    <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
+        with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
+    </p>
+</div>
+
+<div id="stopDialog" title="Stop Options">
+    <p>Reset the clock to <input id='submit' type='text' name='startTime' value='25' style='width:30px;'/> minutes
+        with a warning at <input id='submit' type='text' name='warnTime' value='2' style='width:30px;'/> minutes
+    </p>
+</div>
+
 
 
 <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
@@ -192,11 +212,21 @@ ul button, ol button {
                     if ($(this).hasClass('Hole')) {
                         $("#holeDialog").dialog("open");
                     }
+                    if ($(this).hasClass('Forward')) {
+                        $("#forwardDialog").dialog("open");
+                    }
+                    if ($(this).hasClass('Back')) {
+                        $("#backDialog").dialog("open");
+                    }
+
                     if ($(this).hasClass('Left')) {
                         $("#leftDialog").dialog("open");
                     }
                     if ($(this).hasClass('Right')) {
                         $("#rightDialog").dialog("open");
+                    }
+                    if ($(this).hasClass('Stop')) {
+                        $("#stopDialog").dialog("open");
                     }
                 })  ;
             }
@@ -249,6 +279,35 @@ ul button, ol button {
                }
            }
        });
+
+       $('#forwardDialog').dialog({
+           autoOpen: false,
+           modal: false,
+           resizable: false,
+           buttons: {
+               "Confirm": function () {
+                   $(this).dialog("close");
+               },
+               "Cancel": function () {
+                   $(this).dialog("close");
+               }
+           }
+       });
+       $('#backDialog').dialog({
+           autoOpen: false,
+           modal: false,
+           resizable: false,
+           buttons: {
+               "Confirm": function () {
+                   $(this).dialog("close");
+               },
+               "Cancel": function () {
+                   $(this).dialog("close");
+               }
+           }
+       });
+
+
        $('#leftDialog').dialog({
            autoOpen: false,
            modal: false,
@@ -263,6 +322,19 @@ ul button, ol button {
            }
        });
        $('#rightDialog').dialog({
+           autoOpen: false,
+           modal: false,
+           resizable: false,
+           buttons: {
+               "Confirm": function () {
+                   $(this).dialog("close");
+               },
+               "Cancel": function () {
+                   $(this).dialog("close");
+               }
+           }
+       });
+       $('#stopDialog').dialog({
            autoOpen: false,
            modal: false,
            resizable: false,
