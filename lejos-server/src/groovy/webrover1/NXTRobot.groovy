@@ -65,11 +65,9 @@ class NXTRobot {
 	def sense(config) {
 		int sensornumber = 1;
 		if (config.sensor.equals('ultrasonic')) {
-			def distance = ((RoverUltrasonicSensor) robot.getSensor(1)).distance()
-			return [distance:distance]
+			return [distance:distance()]
 		} else if (config.sensor.equals('touch')) {
-			def bump = ((RoverTouchSensor) robot.getSensor(1)).isPressed()
-			return [pressed:bump]
+			return [pressed:pressed()]
 		} else if (config.sensor.equals('sound')) {
 			def value = ((RoverSoundSensor) robot.getSensor(1)).readValue()
 			return [sound:value]
@@ -77,6 +75,14 @@ class NXTRobot {
 			def value = ((RoverLightSensor) robot.getSensor(1)).getLightValue();
 			return [light:value]
 		}
+	}
+	
+	def distance() {
+		((RoverUltrasonicSensor) robot.getSensor(1)).distance()
+	}
+	
+	def pressed() {
+		((RoverTouchSensor) robot.getSensor(1)).isPressed()
 	}
 	
 	def teardown() {

@@ -11,19 +11,19 @@ class ImpRobot {
 	}
 	
 	def forward() {
-		send('1')
+		send('5')
 	}
 	
 	def left() {
-		send('2')
+		send('6')
 	}
 	
 	def right() {
-		send('3')
+		send('7')
 	}
 	
 	def backward() {
-		send('4')
+		send('8')
 	}
 	
 	def send(value) {
@@ -36,12 +36,21 @@ class ImpRobot {
 	}
 	
 	def stop() {
+		send('9')
 	}
 	
 	def sense(config) {
 		[:]
 	}
 	
+	def distance() {
+		255
+	}
+	
+	def pressed() {
+		false
+	}
+
 	def teardown() {
 	}
 }
