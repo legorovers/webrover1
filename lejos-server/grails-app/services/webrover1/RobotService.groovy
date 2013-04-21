@@ -27,6 +27,9 @@ class RobotService implements InitializingBean, DisposableBean {
 	def delay = 0
 	def running = true
 	def grailsApplication
+	def rule = 0
+	def sensor = 'touch'
+	def threshold = 0
 
     public void afterPropertiesSet() throws Exception {
 		def config = grailsApplication.config.nxt.robot
@@ -90,25 +93,30 @@ class RobotService implements InitializingBean, DisposableBean {
 					while (duration > 0 && commands.size() == 0) {
 						Thread.sleep(10)
 						duration -= 10
-
-						def obstacle = false
-		    			if (config.sensor.equals('ultrasonic')) {
-		    				def distance = ((RoverUltrasonicSensor) robot.getSensor(1)).distance()
-		    				println("$distance")
-		    				if (distance < 50) {
-		    				    obstacle = true
-		    				}
-						} else if (config.sensor.equals('touch')) {
-							def bump = ((RoverTouchSensor) robot.getSensor(1)).isPressed()
-						} else if (config.sensor.equals('sound')) {
-						    def value = ((RoverSoundSensor) robot.getSensor(1)).readValue()
-						} else if (config.sensor.equals('light')) {
-							def value = ((RoverLightSensor) robot.getSensor(1)).getLightValue();
-						}
 						
-						if (obstacle) {
-							duration = 0
-							println("$duration")
+						if (rule == 1) {
+							def obstacle = false
+			    			if (sensor.equals('ultrasonic')) {
+			    				def distance = ((RoverUltrasonicSensor) robot.getSensor(1)).distance()
+			    				println("$distance")
+			    				if (distance < threshold) {
+			    				    obstacle = true
+			    				}
+							} else if (sensor.equals('touch')) {
+								def bump = ((RoverTouchSensor) robot.getSensor(1)).isPressed()
+								if (bump) {
+									obstacle = true
+								}
+//							} else if (config.sensor.equals('sound')) {
+//							    def value = ((RoverSoundSensor) robot.getSensor(1)).readValue()
+//							} else if (config.sensor.equals('light')) {
+//								def value = ((RoverLightSensor) robot.getSensor(1)).getLightValue();
+							}
+							
+							if (obstacle) {
+								duration = 0
+								println("$duration")
+							}
 						}
 
 					}
