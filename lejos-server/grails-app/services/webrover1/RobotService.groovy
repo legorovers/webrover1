@@ -57,7 +57,7 @@ class RobotService implements InitializingBean, DisposableBean {
 			}
 		}
 		delayThread = Executors.newScheduledThreadPool(1)
-		commands = new ArrayBlockingQueue(1)
+		commands = new ArrayBlockingQueue(100)
 		def th = Thread.start {
 			while (running) {
 				def recent = []

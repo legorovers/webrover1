@@ -22,6 +22,12 @@
 			//el.addEventListener("touchleave", handleLeave, false);
 			el.addEventListener("touchmove", handleMove, false);
 
+			el.addEventListener("mousedown", handleStart, false);
+			el.addEventListener("mouseup", handleEnd, false);
+			el.addEventListener("mouseout", handleCancel, false);
+			//el.addEventListener("touchleave", handleLeave, false);
+			el.addEventListener("mousemove", handleMove, false);
+
 			setInterval(function(){refreshImg()}, 500);
 			setInterval(function(){checkSensor()}, 1000);
 
