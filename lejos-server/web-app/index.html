@@ -44,6 +44,37 @@
 				// post JSON to WebRover API
 				$.getJSON('api/delay/' + $('#delay').val());
 			});
+			
+			$(document).keydown(function(e){
+				var jsonResponse = {};
+				jsonResponse['duration'] = 100;
+			    switch(e.which) {
+			        case 37: // left
+					jsonResponse['direction'] = 'left';
+			        break;
+			
+			        case 38: // up
+					jsonResponse['direction'] = 'forward';
+			        break;
+			
+			        case 39: // right
+					jsonResponse['direction'] = 'right';
+			        break;
+			
+			        case 40: // down
+					jsonResponse['direction'] = 'backward';
+			        break;
+			
+			        default:
+					jsonResponse['direction'] = 'stop';
+					return; // exit this handler for other keys
+			    }
+				// post JSON to WebRover API
+				$.post("api", jsonResponse, function(data){
+					console.log(data.result);
+				},"json");
+			    e.preventDefault();
+			});
 		}
 		
 		var controlInterval;
