@@ -38,8 +38,8 @@
 			//el.addEventListener("touchleave", handleLeave, false);
 			el.addEventListener("touchmove", handleMove, false);
 
-			setInterval(function(){refreshImg()}, 500);
-			setInterval(function(){checkSensor()}, 1000);
+			//setInterval(function(){refreshImg()}, 500);
+			//setInterval(function(){checkSensor()}, 1000);
 			$('#delay').change(function() {
 				// post JSON to WebRover API
 				$.getJSON('api/delay/' + $('#delay').val());
@@ -91,7 +91,7 @@
 							commandSing:function(touch) {
 								clearInterval(controlInterval);
 								directionCont = getCommandForPoint(touch.pageX, touch.pageY, touch.force);
-								//document.getElementById('log').innerHTML = 'End';
+								document.getElementsByTagName('canvas')[0].style.backgroundImage = "url('images/d-pad.gif')";
 							}
 		}
 
@@ -106,11 +106,6 @@ function handleStart(evt)
 	for (var i=0; i<touches.length; i++) {
 		// call function to update rover
 		control.commandCont(touches[i]);
-		
-		/*ongoingTouches.push(touches[i]);
-		var color = colorForTouch(touches[i]);
-		ctx.fillStyle = color;
-		ctx.fillRect(touches[i].pageX-2, touches[i].pageY-2, 4, 4);*/
 	}
 }
 function handleMove(evt)
@@ -126,19 +121,6 @@ function handleMove(evt)
 	for (var i=0; i<touches.length; i++) {
 		// call function to update rover
 		control.commandCont(touches[i]);
-		
-		/*var color = colorForTouch(touches[i]);
-		var idx = ongoingTouchIndexById(touches[i].identifier);
-		
-		el.style.backgroundColor = color;
-
-		ctx.fillStyle = color;
-		ctx.beginPath();
-		ctx.moveTo(ongoingTouches[idx].pageX, ongoingTouches[idx].pageY);
-		ctx.lineTo(touches[i].pageX, touches[i].pageY);
-		ctx.closePath();
-		ctx.stroke();
-		ongoingTouches.splice(idx, 1, touches[i]);  // swap in the new touch record*/
 	}
 }
 function handleEnd(evt)
@@ -154,46 +136,13 @@ function handleEnd(evt)
 
 		// call function to update rover end touch
 		control.commandSing(touches[i]);
-		
-		/*var color = colorForTouch(touches[i]);
-		var idx = ongoingTouchIndexById(touches[i].identifier);
-		 
-		ctx.fillStyle = color;
-		ctx.beginPath();
-		ctx.moveTo(ongoingTouches[i].pageX, ongoingTouches[i].pageY);
-		ctx.lineTo(touches[i].pageX, touches[i].pageY);
-		ongoingTouches.splice(i, 1);  // remove it; we're done*/
 	}
-
-  el.style.backgroundImage = "url('d-pad.gif')";
 }
 function handleCancel(evt)
 {
 	evt.preventDefault();
-	/*var touches = evt.changedTouches;
-
-	for (var i=0; i<touches.length; i++) {
-		ongoingTouches.splice(i, 1);  // remove it; we're done
-	}*/
   el.style.backgroundImage = "url('d-pad.gif')";
 }
-/*function colorForTouch(touch)
-{
-	var id = touch.identifier;
-	id = id.toString(16); // make it a hex digit
-	return "#" + id + id + id;
-}
-function ongoingTouchIndexById(idToFind)
-{
-	for (var i=0; i<ongoingTouches.length; i++) {
-		var id = ongoingTouches[i].identifier;
-		 
-		if (id == idToFind) {
-		  return i;
-		}
-	}
-	return -1;    // not found
-}*/
 
 function getCommandForPoint(touchX, touchY, force)  
 {
@@ -327,6 +276,6 @@ $.getJSON('api/sense', function(data) {
     <p><small>What I can see</small></p>
     <div id="sensor"></div>
     <img id="video" src="video.jpg"/>
-    <div id="log"></div>
+    <div id="log" style="height:30px;width:100%;background:#0f0;"></div>
 	</body>
 </html>
