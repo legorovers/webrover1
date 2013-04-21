@@ -38,8 +38,8 @@
 			//el.addEventListener("touchleave", handleLeave, false);
 			el.addEventListener("touchmove", handleMove, false);
 
-			//setInterval(function(){refreshImg()}, 500);
-			//setInterval(function(){checkSensor()}, 1000);
+			setInterval(function(){refreshImg()}, 500);
+			setInterval(function(){checkSensor()}, 1000);
 			$('#delay').change(function() {
 				// post JSON to WebRover API
 				$.getJSON('api/delay/' + $('#delay').val());
@@ -202,7 +202,7 @@ function getCommandForPoint(touchX, touchY, force)
     canvas.style.backgroundImage = "url('images/d-pad-left.gif')";
 	}
 	if (direction == 'forward') {
-		duration = directionY;
+		duration = directionY * 5;
     canvas.style.backgroundImage = "url('images/d-pad-fwd.gif')";
 	}
 	if (direction =='right') {
@@ -210,7 +210,7 @@ function getCommandForPoint(touchX, touchY, force)
     canvas.style.backgroundImage = "url('images/d-pad-right.gif')";
 	}
 	if (direction == 'backward') {
-		duration = -directionY;
+		duration = -directionY * 3;
     canvas.style.backgroundImage = "url('images/d-pad-back.gif')";
 	}
 
@@ -218,7 +218,7 @@ function getCommandForPoint(touchX, touchY, force)
 	var jsonResponse = {};
 	jsonResponse['direction'] = direction;
 	jsonResponse['distance'] = null;
-	jsonResponse['duration'] = duration * 5;
+	jsonResponse['duration'] = duration;
 	// convert force input to rover output - TODO move this server side
 	force = (force/100) * 50;
 	jsonResponse['velocity'] = force-1;
@@ -276,6 +276,6 @@ $.getJSON('api/sense', function(data) {
     <p><small>What I can see</small></p>
     <div id="sensor"></div>
     <img id="video" src="video.jpg"/>
-    <div id="log" style="height:30px;width:100%;background:#0f0;"></div>
+    <div id="log"></div>
 	</body>
 </html>

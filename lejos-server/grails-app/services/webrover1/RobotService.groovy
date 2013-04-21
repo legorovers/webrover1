@@ -63,13 +63,13 @@ class RobotService implements InitializingBean, DisposableBean {
 						
 						if (rule == 1) {
 							def obstacle = false
-			    			if (sensor.equals('ultrasonic')) {
+			    			if (config.sensor.equals('ultrasonic')) {
 			    				def distance = robot.distance()
 			    				println("$distance")
 			    				if (distance < threshold) {
 			    				    obstacle = true
 			    				}
-							} else if (sensor.equals('touch')) {
+							} else if (config.sensor.equals('touch')) {
 								def bump = robot.pressed()
 								if (bump) {
 									obstacle = true
