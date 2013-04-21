@@ -13,8 +13,9 @@ import grails.converters.JSON
 
 import java.io.PrintStream
 import java.util.concurrent.ArrayBlockingQueue
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 import lejos.nxt.remote.RemoteMotor
 import lejos.robotics.navigation.DifferentialPilot
@@ -55,7 +56,7 @@ class RobotService implements InitializingBean, DisposableBean {
 				robot.setSensor(1, lSensor);
 			}
 		}
-		delayThread = Executors.newFixedThreadPool(1)
+		delayThread = Executors.newScheduledThreadPool(1)
 		commands = new ArrayBlockingQueue(1)
 		def th = Thread.start {
 			while (running) {
@@ -63,7 +64,8 @@ class RobotService implements InitializingBean, DisposableBean {
 				commands.drainTo(recent)
 				
 				if (recent.size()) {
-					def command = recent[0]
+					println recent.size()
+					def command = recent[-1]
 					println command.direction
 					def duration = command.duration
 					println duration
@@ -89,9 +91,13 @@ class RobotService implements InitializingBean, DisposableBean {
 						Thread.sleep(10)
 						duration -= 10
 					}
-					robot.pilot.stop()
+					if (commands.size() == 0) {
+						robot.pilot.stop()
+					}
 				}
-				Thread.sleep(100)
+				if (commands.size() == 0) {
+					Thread.sleep(100)
+				}
 			}
 		}
 		
@@ -99,12 +105,9 @@ class RobotService implements InitializingBean, DisposableBean {
 	
 	def delayThread 
 	def action(direction, duration) {
-		delayThread.submit({->
-			if (delay > 0) {
-				Thread.sleep(delay)
-			}		
+		delayThread.schedule({
 			commands.put([direction:direction, duration:duration])
-		} as Callable)
+		} as Runnable, delay, TimeUnit.MILLISECONDS)
 	}
 	
 	def sense() {

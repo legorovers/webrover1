@@ -22,7 +22,7 @@
 			//el.addEventListener("touchleave", handleLeave, false);
 			el.addEventListener("touchmove", handleMove, false);
 
-			setInterval(function(){refreshImg()}, 1000);
+			setInterval(function(){refreshImg()}, 500);
 			setInterval(function(){checkSensor()}, 1000);
 
 		}
@@ -37,7 +37,7 @@
 							},
 							commandSing:function(touch) {
 								clearInterval(controlInterval);
-								alert(controlInterval);
+								//alert(controlInterval);
 								directionCont = getCommandForPoint(touch.pageX, touch.pageY, touch.force);
 								//document.getElementById('log').innerHTML = 'End';
 							}
@@ -196,18 +196,20 @@ function getCommandForPoint(touchX, touchY, force)
 	}
 
 	// create JSON response
-	var jsonResponse = {};
-	jsonResponse['direction'] = direction;
-	jsonResponse['distance'] = null;
-	jsonResponse['duration'] = duration * 5;
-	// convert force input to rover output - TODO move this server side
-	force = (force/100) * 50;
-	jsonResponse['velocity'] = force-1;
-	
-	// post JSON to WebRover API
-	$.post("api", jsonResponse, function(data){
-		console.log(data.result);
-	},"json");
+	if (duration != NaN) {
+		var jsonResponse = {};
+		jsonResponse['direction'] = direction;
+		jsonResponse['distance'] = null;
+		jsonResponse['duration'] = duration * 5;
+		// convert force input to rover output - TODO move this server side
+		force = (force/100) * 50;
+		jsonResponse['velocity'] = force-1;
+		
+		// post JSON to WebRover API
+		$.post("api", jsonResponse, function(data){
+			console.log(data.result);
+		},"json");
+	}
 }
 
 function refreshImg()

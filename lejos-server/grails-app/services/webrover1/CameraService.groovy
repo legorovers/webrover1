@@ -10,6 +10,9 @@ class CameraService implements InitializingBean, DisposableBean {
 	def frame = 0
 	def running = true
 	
+	def ipWebcam = '172.17.5.198'
+	// def ipWebcam = '192.168.0.15'
+	
     public void afterPropertiesSet() throws Exception {
 		def th = Thread.start {
 			while (running) {
@@ -22,7 +25,7 @@ class CameraService implements InitializingBean, DisposableBean {
     def snapshot() {
 		def next = (frame + 1) % (delay + 1)
 		new File("frame-${next}.jpeg").withOutputStream { out ->
-			new URL('http://172.17.5.198:8080/shot.jpg').withInputStream { out << it }
+			new URL("http://$ipWebcam:8080/shot.jpg").withInputStream { out << it }
 		}
 		frame = next
     }
