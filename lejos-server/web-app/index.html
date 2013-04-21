@@ -53,18 +53,22 @@
 				jsonResponse['duration'] = 100;
 			    switch(e.which) {
 			        case 37: // left
+			        case 65: // a
 					jsonResponse['direction'] = 'left';
 			        break;
 			
 			        case 38: // up
+			        case 87: // w
 					jsonResponse['direction'] = 'forward';
 			        break;
 			
 			        case 39: // right
+			        case 68: // d
 					jsonResponse['direction'] = 'right';
 			        break;
 			
 			        case 40: // down
+			        case 83: // s
 					jsonResponse['direction'] = 'backward';
 			        break;
 			
