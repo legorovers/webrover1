@@ -60,7 +60,7 @@ class RobotService implements InitializingBean, DisposableBean {
 				commands.drainTo(recent)
 				
 				if (recent.size()) {
-					def command = recent[0]
+					def command = recent[-1]
 					println command.direction
 					def duration = command.duration
 					println duration
@@ -79,9 +79,19 @@ class RobotService implements InitializingBean, DisposableBean {
 							break
 						case 'stop':
 							duration = 0
-							//robot.pilot.stop()
 							break
 					}
+					
+	    			if (config.sensor.equals('ultrasonic')) {
+	    				def distance = ((RoverUltrasonicSensor) robot.getSensor(1)).distance()
+					} else if (config.sensor.equals('touch')) {
+						def bump = ((RoverTouchSensor) robot.getSensor(1)).isPressed()
+					} else if (config.sensor.equals('sound')) {
+					    def value = ((RoverSoundSensor) robot.getSensor(1)).readValue()
+					} else if (config.sensor.equals('light')) {
+						def value = ((RoverLightSensor) robot.getSensor(1)).getLightValue();
+					}
+
 					while (duration > 0 && commands.size() == 0) {
 						Thread.sleep(10)
 						duration -= 10
