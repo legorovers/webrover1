@@ -1,4 +1,5 @@
 *~
+*.orig
 .DS_Store
 /WW_MountainLion/
 /leJOS_NXJ_0.9.1beta-3/

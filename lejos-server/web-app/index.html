@@ -1,14 +1,30 @@
 <html>
 	<head>
-		<title>Web Rover FTW!</title>
+		<title>WebRover1 FTW!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<style>
-			body{
-				font:sans-serif;
+			body {
+				margin:0;
+				padding: 0 10px 10px;
+				
+				font-family: sans-serif;
+				text-align: center;
 			}
-      canvas{
-        background-color: lightgrey;
-      }
+			h1 {
+				color: white;
+				background: black;
+				padding: 0.5em;
+				text-align: center;
+				margin: 0 -10px 5px;
+			}
+			canvas{
+				background-color: lightgrey;
+			  }
+			 #dpad canvas {
+			 	background: white url(images/d-pad.gif) no-repeat center center;
+				border-radius: 100%;
+				border: 1px dashed #333;
+			 }
 		</style>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 		<script type="text/javascript">
@@ -18,19 +34,50 @@
 			var el = document.getElementsByTagName("canvas")[0];
 			el.addEventListener("touchstart", handleStart, false);
 			el.addEventListener("touchend", handleEnd, false);
-			el.addEventListener("touchcancel", handleCancel, false);
+			//el.addEventListener("touchcancel", handleCancel, false);
 			//el.addEventListener("touchleave", handleLeave, false);
 			el.addEventListener("touchmove", handleMove, false);
 
-			el.addEventListener("mousedown", handleStart, false);
-			el.addEventListener("mouseup", handleEnd, false);
-			el.addEventListener("mouseout", handleCancel, false);
-			//el.addEventListener("touchleave", handleLeave, false);
-			el.addEventListener("mousemove", handleMove, false);
-
 			setInterval(function(){refreshImg()}, 500);
 			setInterval(function(){checkSensor()}, 1000);
-
+			$('#delay').change(function() {
+				// post JSON to WebRover API
+				$.getJSON('api/delay/' + $('#delay').val());
+			});
+			$('#rule').change(function() {
+				$.getJSON('api/rule/' + $('#rule').val() + '/ultrasonic/50');
+			});
+			
+			$(document).keydown(function(e){
+				var jsonResponse = {};
+				jsonResponse['duration'] = 100;
+			    switch(e.which) {
+			        case 37: // left
+					jsonResponse['direction'] = 'left';
+			        break;
+			
+			        case 38: // up
+					jsonResponse['direction'] = 'forward';
+			        break;
+			
+			        case 39: // right
+					jsonResponse['direction'] = 'right';
+			        break;
+			
+			        case 40: // down
+					jsonResponse['direction'] = 'backward';
+			        break;
+			
+			        default:
+					jsonResponse['direction'] = 'stop';
+					return; // exit this handler for other keys
+			    }
+				// post JSON to WebRover API
+				$.post("api", jsonResponse, function(data){
+					console.log(data.result);
+				},"json");
+			    e.preventDefault();
+			});
 		}
 		
 		var controlInterval;
@@ -43,9 +90,8 @@
 							},
 							commandSing:function(touch) {
 								clearInterval(controlInterval);
-								//alert(controlInterval);
 								directionCont = getCommandForPoint(touch.pageX, touch.pageY, touch.force);
-								//document.getElementById('log').innerHTML = 'End';
+								document.getElementsByTagName('canvas')[0].style.backgroundImage = "url('images/d-pad.gif')";
 							}
 		}
 
@@ -60,11 +106,6 @@ function handleStart(evt)
 	for (var i=0; i<touches.length; i++) {
 		// call function to update rover
 		control.commandCont(touches[i]);
-		
-		ongoingTouches.push(touches[i]);
-		var color = colorForTouch(touches[i]);
-		ctx.fillStyle = color;
-		ctx.fillRect(touches[i].pageX-2, touches[i].pageY-2, 4, 4);
 	}
 }
 function handleMove(evt)
@@ -80,19 +121,6 @@ function handleMove(evt)
 	for (var i=0; i<touches.length; i++) {
 		// call function to update rover
 		control.commandCont(touches[i]);
-		
-		var color = colorForTouch(touches[i]);
-		var idx = ongoingTouchIndexById(touches[i].identifier);
-		
-		el.style.backgroundColor = color;
-
-		ctx.fillStyle = color;
-		ctx.beginPath();
-		ctx.moveTo(ongoingTouches[idx].pageX, ongoingTouches[idx].pageY);
-		ctx.lineTo(touches[i].pageX, touches[i].pageY);
-		ctx.closePath();
-		ctx.stroke();
-		ongoingTouches.splice(idx, 1, touches[i]);  // swap in the new touch record
 	}
 }
 function handleEnd(evt)
@@ -107,43 +135,13 @@ function handleEnd(evt)
   for (var i=0; i<touches.length; i++) {
 
 		// call function to update rover end touch
-		control.commandSing(touches[i].pageX, touches[i].pageY);
-		
-		var color = colorForTouch(touches[i]);
-		var idx = ongoingTouchIndexById(touches[i].identifier);
-		 
-		ctx.fillStyle = color;
-		ctx.beginPath();
-		ctx.moveTo(ongoingTouches[i].pageX, ongoingTouches[i].pageY);
-		ctx.lineTo(touches[i].pageX, touches[i].pageY);
-		ongoingTouches.splice(i, 1);  // remove it; we're done
+		control.commandSing(touches[i]);
 	}
 }
 function handleCancel(evt)
 {
 	evt.preventDefault();
-	var touches = evt.changedTouches;
-	 
-	for (var i=0; i<touches.length; i++) {
-		ongoingTouches.splice(i, 1);  // remove it; we're done
-	}
-}
-function colorForTouch(touch)
-{
-	var id = touch.identifier;
-	id = id.toString(16); // make it a hex digit
-	return "#" + id + id + id;
-}
-function ongoingTouchIndexById(idToFind)
-{
-	for (var i=0; i<ongoingTouches.length; i++) {
-		var id = ongoingTouches[i].identifier;
-		 
-		if (id == idToFind) {
-		  return i;
-		}
-	}
-	return -1;    // not found
+  el.style.backgroundImage = "url('d-pad.gif')";
 }
 
 function getCommandForPoint(touchX, touchY, force)  
@@ -160,12 +158,23 @@ function getCommandForPoint(touchX, touchY, force)
 	var centreX = canvas.width/2;
 	var centreY = canvas.height/2;
   
+	touchX = touchX - canvas.offsetLeft;
+	touchY = touchY - canvas.offsetTop;
+  
+	//reset if outside bounds
 	if(touchX < 0){
 		touchX = 0;
+	}
+	else if(touchX > canvas.width){
+		touchX = canvas.width;
 	}
 	if(touchY < 0){
 		touchY = 0;
 	}
+	else if(touchY > canvas.height){
+		touchY = canvas.height;
+	}
+	
 	var directionX = centreX - touchX;
 	var directionY = centreY - touchY;
 	var left = directionX > 0 ? true : false;
@@ -190,32 +199,34 @@ function getCommandForPoint(touchX, touchY, force)
 	// set duration
 	if(direction == 'left'){
 		duration = directionX;
+    canvas.style.backgroundImage = "url('images/d-pad-left.gif')";
 	}
 	if (direction == 'forward') {
-		duration = directionY;
+		duration = directionY * 5;
+    canvas.style.backgroundImage = "url('images/d-pad-fwd.gif')";
 	}
 	if (direction =='right') {
 		duration = -directionX;
+    canvas.style.backgroundImage = "url('images/d-pad-right.gif')";
 	}
 	if (direction == 'backward') {
-		duration = -directionY;
+		duration = -directionY * 3;
+    canvas.style.backgroundImage = "url('images/d-pad-back.gif')";
 	}
 
-	// create JSON response
-	if (duration != NaN) {
-		var jsonResponse = {};
-		jsonResponse['direction'] = direction;
-		jsonResponse['distance'] = null;
-		jsonResponse['duration'] = duration * 5;
-		// convert force input to rover output - TODO move this server side
-		force = (force/100) * 50;
-		jsonResponse['velocity'] = force-1;
-		
-		// post JSON to WebRover API
-		$.post("api", jsonResponse, function(data){
-			console.log(data.result);
-		},"json");
-	}
+  // create JSON response
+	var jsonResponse = {};
+	jsonResponse['direction'] = direction;
+	jsonResponse['distance'] = null;
+	jsonResponse['duration'] = duration;
+	// convert force input to rover output - TODO move this server side
+	force = (force/100) * 50;
+	jsonResponse['velocity'] = force-1;
+
+	// post JSON to WebRover API
+	$.post("api", jsonResponse, function(data){
+		console.log(data.result);
+	},"json");
 }
 
 function refreshImg()
@@ -231,14 +242,40 @@ $.getJSON('api/sense', function(data) {
 		</script>
 	</head>
 	<body onload='startup();'>
-		<h1>Web Rover</h1>
-		<canvas height="300px" style='height:300px; border:1px solid black; position:fixed; top:0; left:0;'>
-			
+    <div class="content"  style="position: relative">
+		<h1>WebRover1</h1>
+     <div id="dpad">
+     	<p><small>Drive me</small></p>
+		<canvas height="300px" style='height:300px;'>
 		</canvas>
-    <div id="log" style="margin-top:300px;"></div>
+    </div>
+    <div id="settings">
+    	<form>
+        	<p>
+            	<label>Time delay</label>
+                <select id="delay">
+                	<option value="0">None</option>
+                    <option value="500">0.5 sec</option>
+                    <option value="1000">1 sec</option>
+                    <option value="1300">Earth>Moon: 1.3 sec</option>
+                    <option value="36000">Earth>Mars: 3 min</option>
+                </select>
+            </p>
+        </form>
+        
+        <form>
+        	<p>
+        		<label>Obstacle Rule</label>
+        		<select id="rule">
+        			<option value="0">Off</option>
+        			<option value="1">On</option>
+        		</select>
+        	</p>
+        </form>
+    </div>
+    <p><small>What I can see</small></p>
     <div id="sensor"></div>
-
-    <!-- TODO: Remove the hard coded IP Address -->
     <img id="video" src="video.jpg"/>
+    <div id="log"></div>
 	</body>
 </html>

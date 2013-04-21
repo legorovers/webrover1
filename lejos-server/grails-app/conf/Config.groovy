@@ -62,13 +62,16 @@ grails.hibernate.cache.queries = false
 
 nxt.robot.name = 'noor'
 nxt.robot.address = '00165312A8AB'
-nxt.robot.sensor = 'light'
+nxt.robot.sensor = 'ultrasonic'
 
 environments {
 	claudia {
 		nxt.robot.name = 'claudia'
 		nxt.robot.address = '001653111619'
 		nxt.robot.sensor = 'touch'
+	}
+	imp {
+		nxt.robot.type = 'imp'
 	}
     development {
         grails.logging.jul.usebridge = true
