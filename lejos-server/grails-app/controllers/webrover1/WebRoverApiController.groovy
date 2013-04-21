@@ -27,6 +27,7 @@ class WebRoverApiController {
 	
 	def delay() {
 		robotService.delay = params.delay as int
+		println "delay: $robotService.delay"
 		def result = [delay:robotService.delay]
 		render result as JSON
 	}
