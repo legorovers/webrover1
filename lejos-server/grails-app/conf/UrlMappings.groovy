@@ -7,11 +7,13 @@ class UrlMappings {
 //			}
 //		}
 
-		"/api/$direction/$duration?"(controller:'WebRoverApi', action:[GET:'get'])
+		"/api/$direction?/$duration?"(controller:'WebRoverApi', action:[GET:'command', POST:'command'], parseRequest:true)
 		"/api/sense"(controller:'WebRoverApi', action:[GET:'sense'])
-		"/api"(controller:'WebRoverApi', action:[POST:'post'], parseRequest:true)
+		"/api/delay/$delay?"(controller:'WebRoverApi', action:[GET:'delay'])
 		
 		"/"(controller:'WebRoverUi', action:[GET:'html'])
+		"/snapshot"(controller:'WebRoverUi', action:[GET:'snapshot'])
+		"/video.jpg"(controller:'WebRoverUi', action:[GET:'video'])
 		"500"(view:'/error')
 	}
 }

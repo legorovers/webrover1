@@ -23,6 +23,7 @@
 			el.addEventListener("touchmove", handleMove, false);
 
 			setInterval(function(){refreshImg()}, 1000);
+			setInterval(function(){checkSensor()}, 1000);
 
 		}
 		
@@ -41,178 +42,184 @@
 								//document.getElementById('log').innerHTML = 'End';
 							}
 		}
-		function handleStart(evt)
-		{
+
+function handleStart(evt)
+{
+
+	evt.preventDefault();
+	var el = document.getElementsByTagName("canvas")[0];
+	var ctx = el.getContext("2d");
+	var touches = evt.changedTouches;
+		     
+	for (var i=0; i<touches.length; i++) {
+		// call function to update rover
+		control.commandCont(touches[i]);
 		
-			evt.preventDefault();
-			var el = document.getElementsByTagName("canvas")[0];
-			var ctx = el.getContext("2d");
-			var touches = evt.changedTouches;
-				     
-			for (var i=0; i<touches.length; i++) {
-				// call function to update rover
-				control.commandCont(touches[i]);
-				
-				ongoingTouches.push(touches[i]);
-				var color = colorForTouch(touches[i]);
-				ctx.fillStyle = color;
-				ctx.fillRect(touches[i].pageX-2, touches[i].pageY-2, 4, 4);
-			}
-		}
-		function handleMove(evt)
-		{
+		ongoingTouches.push(touches[i]);
+		var color = colorForTouch(touches[i]);
+		ctx.fillStyle = color;
+		ctx.fillRect(touches[i].pageX-2, touches[i].pageY-2, 4, 4);
+	}
+}
+function handleMove(evt)
+{
 
-			evt.preventDefault();
-			var el = document.getElementsByTagName("canvas")[0];
-			var ctx = el.getContext("2d");
-			var touches = evt.changedTouches;
+  evt.preventDefault();
+  var el = document.getElementsByTagName("canvas")[0];
+  var ctx = el.getContext("2d");
+  var touches = evt.changedTouches;
+  
+  ctx.lineWidth = 4;
+  
+	for (var i=0; i<touches.length; i++) {
+		// call function to update rover
+		control.commandCont(touches[i]);
 		
-			ctx.lineWidth = 4;
+		var color = colorForTouch(touches[i]);
+		var idx = ongoingTouchIndexById(touches[i].identifier);
 		
+		el.style.backgroundColor = color;
 
-			for (var i=0; i<touches.length; i++) {
-				// call function to update rover
-				control.commandCont(touches[i]);
-				
-				var color = colorForTouch(touches[i]);
-				var idx = ongoingTouchIndexById(touches[i].identifier);
-				
-				el.style.backgroundColor = color;
+		ctx.fillStyle = color;
+		ctx.beginPath();
+		ctx.moveTo(ongoingTouches[idx].pageX, ongoingTouches[idx].pageY);
+		ctx.lineTo(touches[i].pageX, touches[i].pageY);
+		ctx.closePath();
+		ctx.stroke();
+		ongoingTouches.splice(idx, 1, touches[i]);  // swap in the new touch record
+	}
+}
+function handleEnd(evt)
+{
+  evt.preventDefault();
+  var el = document.getElementsByTagName("canvas")[0];
+  var ctx = el.getContext("2d");
+  var touches = evt.changedTouches;
+  
+  ctx.lineWidth = 4;
+         
+  for (var i=0; i<touches.length; i++) {
 
-				ctx.fillStyle = color;
-				ctx.beginPath();
-				ctx.moveTo(ongoingTouches[idx].pageX, ongoingTouches[idx].pageY);
-				ctx.lineTo(touches[i].pageX, touches[i].pageY);
-				ctx.closePath();
-				ctx.stroke();
-				ongoingTouches.splice(idx, 1, touches[i]);  // swap in the new touch record
-			}
-		}
-		function handleEnd(evt)
-		{
-			evt.preventDefault();
-			var el = document.getElementsByTagName("canvas")[0];
-			var ctx = el.getContext("2d");
-			var touches = evt.changedTouches;
+		// call function to update rover end touch
+		control.commandSing(touches[i].pageX, touches[i].pageY);
 		
-			ctx.lineWidth = 4;
-				     
-			for (var i=0; i<touches.length; i++) {
-				// call function to update rover end touch
-				control.commandSing(touches[i].pageX, touches[i].pageY);
-				
-				var color = colorForTouch(touches[i]);
-				var idx = ongoingTouchIndexById(touches[i].identifier);
-				 
-				ctx.fillStyle = color;
-				ctx.beginPath();
-				ctx.moveTo(ongoingTouches[i].pageX, ongoingTouches[i].pageY);
-				ctx.lineTo(touches[i].pageX, touches[i].pageY);
-				ongoingTouches.splice(i, 1);  // remove it; we're done
-			}
+		var color = colorForTouch(touches[i]);
+		var idx = ongoingTouchIndexById(touches[i].identifier);
+		 
+		ctx.fillStyle = color;
+		ctx.beginPath();
+		ctx.moveTo(ongoingTouches[i].pageX, ongoingTouches[i].pageY);
+		ctx.lineTo(touches[i].pageX, touches[i].pageY);
+		ongoingTouches.splice(i, 1);  // remove it; we're done
+	}
+}
+function handleCancel(evt)
+{
+	evt.preventDefault();
+	var touches = evt.changedTouches;
+	 
+	for (var i=0; i<touches.length; i++) {
+		ongoingTouches.splice(i, 1);  // remove it; we're done
+	}
+}
+function colorForTouch(touch)
+{
+	var id = touch.identifier;
+	id = id.toString(16); // make it a hex digit
+	return "#" + id + id + id;
+}
+function ongoingTouchIndexById(idToFind)
+{
+	for (var i=0; i<ongoingTouches.length; i++) {
+		var id = ongoingTouches[i].identifier;
+		 
+		if (id == idToFind) {
+		  return i;
 		}
-		function handleCancel(evt)
-		{
-			evt.preventDefault();
-			var touches = evt.changedTouches;
-			 
-			for (var i=0; i<touches.length; i++) {
-				ongoingTouches.splice(i, 1);  // remove it; we're done
-			}
-		}
-		function colorForTouch(touch)
-		{
-			var id = touch.identifier;
-			id = id.toString(16); // make it a hex digit
-			return "#" + id + id + id;
-		}
-		function ongoingTouchIndexById(idToFind)
-		{
-			for (var i=0; i<ongoingTouches.length; i++) {
-				var id = ongoingTouches[i].identifier;
-				 
-				if (id == idToFind) {
-				  return i;
-				}
-			}
-			return -1;    // not found
-		}
+	}
+	return -1;    // not found
+}
 
-		function getCommandForPoint(touchX, touchY, force)  
-		{
-			//TODO: Get canvas elements position in screen
-			/*
-				{'direction':[left|right|forward|back|stop],
-				duration:'integer, milliseconds',
-				distance:'cm',
-				velocity:integer}
-			*/
+function getCommandForPoint(touchX, touchY, force)  
+{
+	//TODO: Get canvas elements position in screen
+	/*
+		{'direction':[left|right|forward|back|stop],
+		duration:'integer, milliseconds',
+		distance:'cm',
+		velocity:integer}
+	*/
 
-			var canvas = document.getElementsByTagName('canvas')[0];
-			var centreX = canvas.width/2;
-			var centreY = canvas.height/2;
-		
-			if(touchX < 0){
-				touchX = 0;
-			}
-			if(touchY < 0){
-				touchY = 0;
-			}
-			var directionX = centreX - touchX;
-			var directionY = centreY - touchY;
-			var left = directionX > 0 ? true : false;
-			var forward = directionY > 0 ? true : false;
-			var duration = 250;
-			var direction = 'stop';
-		
-			// work out direction
-			if(forward && left){
-				direction = directionY > directionX ? 'forward' : 'left';
-			}
-			if(forward && !left){
-				direction = directionY > -directionX ? 'forward' : 'right';
-			}
-			if(!forward && left){
-				direction = -directionY > directionX ? 'backward' : 'left';
-			}
-			if(!forward && !left){
-				direction = -directionY > -directionX ? 'backward' : 'right';
-			}
+	var canvas = document.getElementsByTagName('canvas')[0];
+	var centreX = canvas.width/2;
+	var centreY = canvas.height/2;
+  
+	if(touchX < 0){
+		touchX = 0;
+	}
+	if(touchY < 0){
+		touchY = 0;
+	}
+	var directionX = centreX - touchX;
+	var directionY = centreY - touchY;
+	var left = directionX > 0 ? true : false;
+	var forward = directionY > 0 ? true : false;
+	var duration = 250;
+	var direction = 'stop';
 
-			// set duration
-			if(direction == 'left'){
-				duration = directionX;
-			}
-			if (direction == 'forward') {
-				duration = directionY;
-			}
-			if (direction =='right') {
-				duration = -directionX;
-			}
+	// work out direction
+	if(forward && left){
+		direction = directionY > directionX ? 'forward' : 'left';
+	}
+	if(forward && !left){
+		direction = directionY > -directionX ? 'forward' : 'right';
+	}
+	if(!forward && left){
+		direction = -directionY > directionX ? 'backward' : 'left';
+	}
+	if(!forward && !left){
+		direction = -directionY > -directionX ? 'backward' : 'right';
+	}
 
-			if (direction == 'backward') {
-				duration = -directionY;
-			}
+	// set duration
+	if(direction == 'left'){
+		duration = directionX;
+	}
+	if (direction == 'forward') {
+		duration = directionY;
+	}
+	if (direction =='right') {
+		duration = -directionX;
+	}
+	if (direction == 'backward') {
+		duration = -directionY;
+	}
 
-			// create JSON response
-			var jsonResponse = {};
-			jsonResponse['direction'] = direction;
-			jsonResponse['distance'] = null;
-			jsonResponse['duration'] = duration * 5;
-			// convert force input to rover output - TODO move this server side
-			force = (force/100) * 50;
-			jsonResponse['velocity'] = force-1;
-			
-			// post JSON to WebRover API
-			$.post("api", jsonResponse, function(data){
-				console.log(data.result);
-			},"json");
-		}
+	// create JSON response
+	var jsonResponse = {};
+	jsonResponse['direction'] = direction;
+	jsonResponse['distance'] = null;
+	jsonResponse['duration'] = duration * 5;
+	// convert force input to rover output - TODO move this server side
+	force = (force/100) * 50;
+	jsonResponse['velocity'] = force-1;
+	
+	// post JSON to WebRover API
+	$.post("api", jsonResponse, function(data){
+		console.log(data.result);
+	},"json");
+}
 
-		function refreshImg()
-		{
-				$('#video').attr('src', $('#video').attr('src')+'?'+Math.random())
-		}
+function refreshImg()
+{
+  $('#video').attr('src', $('#video').attr('src')+'?'+Math.random())
+}
+function checkSensor() {
+$.getJSON('api/sense', function(data) {
+    document.getElementById('sensor').innerHTML = 'sensor ' + data.pressed;
+});
+}
+
 		</script>
 	</head>
 	<body onload='startup();'>
@@ -220,10 +227,10 @@
 		<canvas height="300px" style='height:300px; border:1px solid black; position:fixed; top:0; left:0;'>
 			
 		</canvas>
-    <div id="log" style="margin-top:300px;">
+    <div id="log" style="margin-top:300px;"></div>
+    <div id="sensor"></div>
 
-    </div>
     <!-- TODO: Remove the hard coded IP Address -->
-    <img id="video" src="http://172.17.5.198:8080/shot.jpg"/>
+    <img id="video" src="video.jpg"/>
 	</body>
 </html>
