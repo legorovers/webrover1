@@ -13,9 +13,13 @@
 .main {
 	text-align: left;
 	max-width: 600px;
-	margin: 0 auto;
-	overflow: hidden;
 }
+	body {
+		padding-right:0;
+	}	
+	h1 {
+		margin-right: 0;
+	}
 
 
 .opts {
@@ -32,6 +36,15 @@
 	background: #ccc;
 	min-height: 500px;
 }
+@media (max-width: 360px) {
+	.opts {
+	width: 60%;
+	}
+	.rule {
+		width: 35%;
+	}
+}
+
 ul, ol, li {
 	list-style: none;
 	margin-left: 0;
@@ -71,7 +84,8 @@ ul, ol, li {
 }
 .ruleTarget .ui-btn-inner {
 	border-style: dashed;
-	border-radius: 1em; 	
+	border-radius: 1em; 
+	padding: .6em;	
 }
 button {
 	border-radius: 3px;
@@ -81,8 +95,9 @@ ul button, ol button {
 	height: 60px;
 	width: 60px;
 }
-.save button {
+.save button, .save .btn {
 	width: 100%;
+	box-sizing: border-box;
 }
 .ui-dialog {
 	background:white !important;
@@ -90,74 +105,7 @@ ul button, ol button {
 div.ui-slider {
 	height: 10px;
 }
-.btn {
-display: inline-block;
-padding: 4px 12px;
-margin-bottom: 0;
-font-size: 14px;
-line-height: 20px;
-color: #333333;
-text-align: center;
-text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
-vertical-align: middle;
-cursor: pointer;
-background-color: #f5f5f5;
-background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
-background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
-background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
-background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
-background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
-background-repeat: repeat-x;
-border: 1px solid #cccccc;
-border-color: #e6e6e6 #e6e6e6 #bfbfbf;
-border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-border-bottom-color: #b3b3b3;
--webkit-border-radius: 4px;
--moz-border-radius: 4px;
-border-radius: 4px;
-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0);
-filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
--webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
--moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-}
 
-.btn-primary {
-color: #ffffff;
-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-background-color: #006dcc;
-background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
-background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
-background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
-background-image: -o-linear-gradient(top, #0088cc, #0044cc);
-background-image: linear-gradient(to bottom, #0088cc, #0044cc);
-background-repeat: repeat-x;
-border-color: #0044cc #0044cc #002a80;
-border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0044cc', GradientType=0);
-filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-}
-.btn:hover,
-.btn:focus {
-  color: #333333;
-  text-decoration: none;
-  background-position: 0 -15px;
-  -webkit-transition: background-position 0.1s linear;
-     -moz-transition: background-position 0.1s linear;
-       -o-transition: background-position 0.1s linear;
-          transition: background-position 0.1s linear;
-}
-
-.btn-primary:hover,
-.btn-primary:focus,
-.btn-primary:active,
-.btn-primary.active,
-.btn-primary.disabled,
-.btn-primary[disabled] {
-  color: #ffffff;
-  background-color: #0044cc;
-  *background-color: #003bb3;
-}
 </style>
 
 </head>
@@ -168,7 +116,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
 <div class="opts">
   <h2>Events</h2>
 	<p class="note">
-    	<small>Drag and drop an event to your rule</small>
+    	<small>Drag and drop an event to trigger your rule</small>
   </p>
     <ul class="ico" id="event">
     	<li id="eventObstacle" class="ruleOpt Obstacle">
@@ -183,7 +131,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
     </ul>
     <h2>Actions</h2>
 	<p class="note">
-    	<small>Drag and drop one or more actions to your rule</small>
+    	<small>Drag and drop one or more actions to create your rule</small>
   </p>
     <ul class="ico" id="action">
     	<li id="actionF" class="ruleOpt Forward">
@@ -216,8 +164,8 @@ filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
         </li>
     </ol>
    <div class="save">
-        <button class="btn btn-primary">Save</button>
-        <button class="btn">Cancel</button>
+        <a href="../lejos-server/web-app/" class="btn btn-primary">Save</a>
+        <a href="../lejos-server/web-app/" class="btn" style="margin-top: 0.5em">Cancel</a>
 	</div>
 </div>
 

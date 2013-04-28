@@ -8,9 +8,9 @@
 			body {
 				text-align: center;
 			}
-			canvas{
-				background-color: lightgrey;
-			  }
+			.main {
+				max-width: 400px;
+			}
 			 #dpad canvas {
 			 	background: white url(images/d-pad.gif) no-repeat center center;
 				border-radius: 100%;
@@ -252,8 +252,9 @@ $.getJSON('api/sense', function(data) {
 	<body onload='startup();'>
     <div class="content"  style="position: relative">
 		<h1>WebRover1</h1>
+    <div class="main">
      <div id="dpad">
-     	<p><small>Drive me</small></p>
+     	<h3><small>Drive me</small></h3>
 		<canvas height="300px" style='height:300px;'>
 		</canvas>
     </div>
@@ -263,8 +264,7 @@ $.getJSON('api/sense', function(data) {
             	<label>Time delay</label>
                 <select id="delay">
                 	<option value="0">None</option>
-                    <option value="500">0.5 sec</option>
-                    <option value="1000">1 sec</option>
+                    <option value="500">UK>Australia: 0.5 sec</option>
                     <option value="1300">Earth>Moon: 1.3 sec</option>
                     <option value="36000">Earth>Mars: 3 min</option>
                 </select>
@@ -278,12 +278,17 @@ $.getJSON('api/sense', function(data) {
         			<option value="0">Off</option>
         			<option value="1">On</option>
         		</select>
-        	</p>
+        	<a href="../../rulebuilder/" class="btn btn-primary">Change Rule</a>
+		</p>
         </form>
     </div>
-    <p><small>What I can see</small></p>
+    <p></p>
+    <h3><small>What I can see</small></h3>
     <div id="sensor"></div>
-    <img id="video" src="video.jpg"/>
-    <div id="log"></div>
+    <img id="video" src="video.jpg" style="width: 400px; height: 250px; max-width: 100%" >
+    <div id="log"></div></div>
 	</body>
 </html>
+
+
+
